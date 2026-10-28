@@ -711,6 +711,20 @@ function renderLogin(){
     try{ await DB.login($("#em").value.trim(),$("#pw").value); }catch(err){ $("#er").textContent=err.message; $("#lb").disabled=false; } };
 }
 let admQ="", admCat="Todas", admSt="todos";
+async function autoCadastrarIphones(){
+  if(DEMO || S.loja.iphonesImportados || window._seeding) return;
+  window._seeding=true;
+  try{
+    const existe=new Set(S.produtos.map(p=>p.nome.trim().toLowerCase()));
+    const novos=catalogoIphones().filter(p=>!existe.has(p.nome.toLowerCase()));
+    if(novos.length){ toast(`Cadastrando ${novos.length} modelos de iPhone…`);
+      for(const p of novos){ const sv=await DB.saveProduto(p); S.produtos.push(sv); } }
+    S.loja={...S.loja,iphonesImportados:true}; await DB.saveLoja(S.loja);
+    if(novos.length){ toast(`${novos.length} modelos de iPhone cadastrados (ocultos). Marque os que você tem.`); admCat="iPhone"; }
+    if(location.hash==="#admin") renderAdmin();
+  }catch(e){ toast("Erro ao cadastrar iPhones: "+e.message); }
+  window._seeding=false;
+}
 async function importarIphones(){
   const existe=new Set(S.produtos.map(p=>p.nome.trim().toLowerCase()));
   const novos=catalogoIphones().filter(p=>!existe.has(p.nome.toLowerCase()));
@@ -946,7 +960,7 @@ addEventListener("hashchange",()=>{ if(location.hash==="#"||location.hash===""){
   catch(e){ console.error(e); $("#app").innerHTML='<div class="load">Não foi possível conectar. Verifique sua internet e recarregue.</div>'; return; }
   try{ [S.loja,S.produtos]=await Promise.all([DB.getLoja(),DB.listProdutos()]); }catch(e){ console.error(e); }
   aplicarIdentidade();
-  DB.onAuth(u=>{ S.user=u; S.authReady=true; if(location.hash==="#admin") renderAdmin(); });
+  DB.onAuth(u=>{ S.user=u; S.authReady=true; if(location.hash==="#admin") renderAdmin(); if(u) autoCadastrarIphones(); });
   rota();
 })();
 </script>
