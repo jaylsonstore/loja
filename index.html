@@ -515,7 +515,7 @@ async function firebaseDB(){
 }
 
 /* ---------------- vídeo: compactação no navegador ---------------- */
-const MAXV=20, PARTE=690*1024;
+const MAXV=45, PARTE=690*1024;
 async function comprimirVideo(file,onProg){
   const url=URL.createObjectURL(file);
   const v=document.createElement("video"); v.src=url; v.playsInline=true; v.setAttribute("playsinline",""); v.preload="auto"; v.crossOrigin="anonymous";
@@ -523,6 +523,8 @@ async function comprimirVideo(file,onProg){
   try{
     await new Promise((res,rej)=>{ v.onloadedmetadata=res; v.onerror=()=>rej(new Error("Não consegui abrir esse vídeo")); });
     const dur=v.duration; if(dur>MAXV+0.6) throw new Error(`O vídeo tem ${Math.round(dur)} s. Use um vídeo de até ${MAXV} segundos.`);
+    const pronto=/^video\/(mp4|webm)$/.test(file.type) || /\.(mp4|webm)$/i.test(file.name||"");
+    if(pronto && file.size<=3.2*1024*1024 && v.videoWidth<=1280 && v.videoHeight<=1280) return {blob:file,tipo:file.type||"video/mp4",dur:Math.round(dur)};
     const k=Math.min(1,640/Math.max(v.videoWidth,v.videoHeight)); const W=Math.max(2,Math.round(v.videoWidth*k/2)*2), H=Math.max(2,Math.round(v.videoHeight*k/2)*2);
     const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const ctx=cv.getContext("2d");
     const stream=cv.captureStream(30); let actx=null;
@@ -530,7 +532,7 @@ async function comprimirVideo(file,onProg){
     const tipos=["video/mp4;codecs=avc1.42E01E,mp4a.40.2","video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9,opus","video/webm;codecs=vp8,opus","video/webm"];
     const mime=window.MediaRecorder && tipos.find(t=>MediaRecorder.isTypeSupported(t));
     if(!mime) throw new Error("Este navegador não consegue compactar vídeo. Tente pelo Chrome ou Safari atualizado.");
-    const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:600000,audioBitsPerSecond:64000});
+    const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:Math.max(250000,Math.min(600000,Math.floor(2.7*1024*1024*8/dur)-64000)),audioBitsPerSecond:64000});
     const pedacos=[]; rec.ondataavailable=e=>{ if(e.data&&e.data.size) pedacos.push(e.data); };
     const parou=new Promise(r=>rec.onstop=r);
     let ativo=true; const desenha=()=>{ if(!ativo) return; ctx.drawImage(v,0,0,W,H); onProg&&onProg(Math.min(99,Math.round(v.currentTime/dur*100))); requestAnimationFrame(desenha); };
