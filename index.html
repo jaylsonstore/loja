@@ -295,6 +295,20 @@ textarea.inp{min-height:96px;resize:vertical}
 .fwrap .foto{width:110px;height:110px}
 .fcor{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:10px;padding:3px 6px;background:var(--card)}
 .fcor select{border:0;background:none;font-size:12px;width:100%;outline:0;padding:2px 0}
+.tag.vid{background:#111;color:#fff;border:0}
+.vthumb{width:64px;height:64px;flex:0 0 auto;border-radius:12px;border:2px solid transparent;background:#111;color:#fff;font-size:20px;display:grid;place-content:center;line-height:1.1;opacity:.75}
+.vthumb small{font-size:10px}
+.vthumb.on{border-color:var(--p);opacity:1}
+.gal .main video{width:100%;height:100%;object-fit:contain;background:#000}
+.vload{display:grid;gap:8px;justify-items:center;color:var(--mut);font-size:14px;text-align:center}
+.vprog{display:grid;gap:6px;justify-items:start;font-size:14px}
+.vprog small{color:var(--mut)}
+.vprog .spin{margin:0}
+.vprev{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.vprev video{width:120px;height:120px;object-fit:cover;border-radius:12px;background:#000}
+.vprev>div:last-child{display:grid;gap:4px}
+.vprev small{color:var(--mut);font-size:12px}
+.vbox{width:72px;height:72px;border-radius:12px;background:#111;color:#fff;display:grid;place-items:center;font-size:24px}
 .cardsw{padding:2px;border-radius:50%;border:1.5px solid transparent;line-height:0}
 .cardsw.on{border-color:var(--tx)}
 .cfoto{width:22px;height:22px;border-radius:50%;object-fit:cover;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
@@ -468,6 +482,9 @@ function demoDB(){
     async listProdutos(){ return [...d.produtos]; },
     async saveProduto(p){ if(!p.id){ p.id=uid(); p.criadoEm=Date.now(); d.produtos.push(p);} else { const i=d.produtos.findIndex(x=>x.id===p.id); if(i>=0) d.produtos[i]=p; else d.produtos.push(p);} save(d); return p; },
     async deleteProduto(id){ d.produtos=d.produtos.filter(x=>x.id!==id); save(d); },
+    async saveVideo(partes){ const id=uid(); (window._vids=window._vids||{})[id]=partes; try{ localStorage.setItem("vid_"+id,JSON.stringify(partes)); }catch{} return id; },
+    async loadVideo(id){ return (window._vids||{})[id] || JSON.parse(localStorage.getItem("vid_"+id)||"null"); },
+    async deleteVideo(id){ try{ delete (window._vids||{})[id]; localStorage.removeItem("vid_"+id); }catch{} },
     async login(email,pw){ if(pw!=="demo123") throw new Error("Senha incorreta (no modo demo use demo123)"); user={email}; sessionStorage.setItem("demo_user",email); authCb(user); },
     async logout(){ user=null; sessionStorage.removeItem("demo_user"); authCb(null); },
     onAuth(cb){ authCb=cb; cb(user); }
@@ -485,6 +502,9 @@ async function firebaseDB(){
     async listProdutos(){ const s=await F.getDocs(col); return s.docs.map(x=>({id:x.id,...x.data()})); },
     async saveProduto(p){ const {id,...data}=p; if(!id){ data.criadoEm=Date.now(); const r=await F.addDoc(col,data); return {id:r.id,...data}; } await F.setDoc(F.doc(db,"produtos",id),data); return p; },
     async deleteProduto(id){ await F.deleteDoc(F.doc(db,"produtos",id)); },
+    async saveVideo(partes){ const id=uid(); for(let i=0;i<partes.length;i++) await F.setDoc(F.doc(db,"videos",id+"_"+i),{d:partes[i],i,n:partes.length}); return id; },
+    async loadVideo(id,n){ const ss=await Promise.all([...Array(n)].map((_,i)=>F.getDoc(F.doc(db,"videos",id+"_"+i)))); return ss.map(x=>x.data().d); },
+    async deleteVideo(id,n){ for(let i=0;i<(n||1);i++){ try{ await F.deleteDoc(F.doc(db,"videos",id+"_"+i)); }catch{} } },
     async login(email,pw){
       try{ await U.signInWithEmailAndPassword(auth,email,pw); }
       catch(e){ const m={"auth/invalid-credential":"E-mail ou senha incorretos","auth/wrong-password":"Senha incorreta","auth/user-not-found":"Usuário não encontrado","auth/too-many-requests":"Muitas tentativas. Aguarde um pouco."}; throw new Error(m[e.code]||e.message); }
@@ -493,6 +513,49 @@ async function firebaseDB(){
     onAuth(cb){ U.onAuthStateChanged(auth,u=>cb(u?{email:u.email}:null)); }
   };
 }
+
+/* ---------------- vídeo: compactação no navegador ---------------- */
+const MAXV=20, PARTE=690*1024;
+async function comprimirVideo(file,onProg){
+  const url=URL.createObjectURL(file);
+  const v=document.createElement("video"); v.src=url; v.playsInline=true; v.setAttribute("playsinline",""); v.preload="auto"; v.crossOrigin="anonymous";
+  v.style.cssText="position:fixed;left:-9999px;top:0;width:2px;height:2px"; document.body.appendChild(v);
+  try{
+    await new Promise((res,rej)=>{ v.onloadedmetadata=res; v.onerror=()=>rej(new Error("Não consegui abrir esse vídeo")); });
+    const dur=v.duration; if(dur>MAXV+0.6) throw new Error(`O vídeo tem ${Math.round(dur)} s. Use um vídeo de até ${MAXV} segundos.`);
+    const k=Math.min(1,640/Math.max(v.videoWidth,v.videoHeight)); const W=Math.max(2,Math.round(v.videoWidth*k/2)*2), H=Math.max(2,Math.round(v.videoHeight*k/2)*2);
+    const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const ctx=cv.getContext("2d");
+    const stream=cv.captureStream(30); let actx=null;
+    try{ actx=new (window.AudioContext||window.webkitAudioContext)(); const src=actx.createMediaElementSource(v); const dest=actx.createMediaStreamDestination(); src.connect(dest); dest.stream.getAudioTracks().forEach(t=>stream.addTrack(t)); }catch{}
+    const tipos=["video/mp4;codecs=avc1.42E01E,mp4a.40.2","video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9,opus","video/webm;codecs=vp8,opus","video/webm"];
+    const mime=window.MediaRecorder && tipos.find(t=>MediaRecorder.isTypeSupported(t));
+    if(!mime) throw new Error("Este navegador não consegue compactar vídeo. Tente pelo Chrome ou Safari atualizado.");
+    const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:600000,audioBitsPerSecond:64000});
+    const pedacos=[]; rec.ondataavailable=e=>{ if(e.data&&e.data.size) pedacos.push(e.data); };
+    const parou=new Promise(r=>rec.onstop=r);
+    let ativo=true; const desenha=()=>{ if(!ativo) return; ctx.drawImage(v,0,0,W,H); onProg&&onProg(Math.min(99,Math.round(v.currentTime/dur*100))); requestAnimationFrame(desenha); };
+    if(actx&&actx.state==="suspended"){ try{ await actx.resume(); }catch{} }
+    rec.start(250);
+    try{ await v.play(); }catch{ v.muted=true; await v.play(); }
+    desenha();
+    await new Promise(r=>{ v.onended=r; setTimeout(r,(dur+3)*1000); });
+    ativo=false; rec.stop(); await parou; try{ actx&&actx.close(); }catch{}
+    const tipo=mime.split(";")[0]; const blob=new Blob(pedacos,{type:tipo});
+    if(blob.size>3.4*1024*1024) throw new Error("O vídeo ficou grande demais mesmo compactado. Tente um vídeo mais curto.");
+    return {blob,tipo,dur:Math.round(dur)};
+  } finally { v.remove(); URL.revokeObjectURL(url); }
+}
+async function blobParaPartes(blob){
+  const b=new Uint8Array(await blob.arrayBuffer()); const partes=[];
+  for(let i=0;i<b.length;i+=PARTE){ const sl=b.subarray(i,i+PARTE); let bin=""; for(let j=0;j<sl.length;j+=0x8000) bin+=String.fromCharCode.apply(null,sl.subarray(j,j+0x8000)); partes.push(btoa(bin)); }
+  return partes;
+}
+function partesParaUrl(partes,tipo){
+  const arrs=partes.map(p=>{ const bin=atob(p); const u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return u; });
+  return URL.createObjectURL(new Blob(arrs,{type:tipo||"video/mp4"}));
+}
+const _vcache={};
+async function urlDoVideo(v){ if(_vcache[v.id]) return _vcache[v.id]; const partes=await DB.loadVideo(v.id,v.n); if(!partes) throw new Error("vídeo não encontrado"); return (_vcache[v.id]=partesParaUrl(partes,v.tipo)); }
 
 /* ============================================================
    ESTADO
@@ -524,7 +587,7 @@ function waLink(msg){ const n=onlyDigits(S.loja.whatsapp); const num = n ? (n.le
 function cardHTML(p){
   const pb=precoBase(p), ca=coresAtivas(p);
   const off = p.precoAntigo>pb && pb ? Math.round((1-pb/p.precoAntigo)*100) : 0;
-  const tags=[ p.esgotado?'<span class="tag no">Esgotado</span>':"", off?`<span class="tag off">-${off}%</span>`:"", p.condicao?`<span class="tag">${esc(p.condicao)}</span>`:"", p.personalizavel?'<span class="tag laser">Personalizável</span>':"" ].join("");
+  const tags=[ p.esgotado?'<span class="tag no">Esgotado</span>':"", off?`<span class="tag off">-${off}%</span>`:"", p.condicao?`<span class="tag">${esc(p.condicao)}</span>`:"", p.personalizavel?'<span class="tag laser">Personalizável</span>':"", p.video?'<span class="tag vid">▶ Vídeo</span>':"" ].join("");
   return `<article class="card ${p.esgotado?"sold":""}" data-id="${p.id}">
     <div class="tags">${tags}</div>
     <div class="ph">${capa(p)?`<img loading="lazy" src="${capa(p)}" alt="${esc(p.nome)}">`:PH(p.categoria)}</div>
@@ -665,7 +728,7 @@ function abrirProduto(id,doClique,corIni){
   const ov=document.createElement("div"); ov.className="ov";
   ov.innerHTML=`<div class="md" role="dialog" aria-label="${esc(p.nome)}"><div class="mbar"><button class="voltar" type="button">‹ Voltar</button><button class="x" type="button" aria-label="Fechar">×</button></div><div class="pd">
     <div class="gal"><div class="main">${capa(p)?`<img id="mainimg" src="${capa(p)}" alt="${esc(p.nome)}">`:PH(p.categoria)}</div>
-      ${fotos.length>1?`<div class="thumbs">${fotos.map((f,i)=>`<button class="${i?"":"on"}" data-i="${i}"><img src="${f}" alt=""></button>`).join("")}</div>`:""}</div>
+      ${(fotos.length>1||p.video)?`<div class="thumbs">${p.video?`<button class="vthumb" type="button" aria-label="Ver vídeo">▶<small>Vídeo</small></button>`:""}${fotos.map((f,i)=>`<button class="${i?"":"on"}" data-i="${i}"><img src="${f}" alt=""></button>`).join("")}</div>`:""}</div>
     <div class="info">
       <div class="cat" style="color:var(--mut);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">${esc(p.categoria||"")}</div>
       <h2>${esc(p.nome)}</h2>
@@ -687,9 +750,14 @@ function abrirProduto(id,doClique,corIni){
     window.scrollTo(0,scrollAntes); setTimeout(()=>{ if(location.hash.startsWith("#p=")){ document.querySelectorAll(".ov").forEach(o=>o.remove()); document.body.style.overflow=""; try{ history.replaceState(null,"",location.pathname+location.search); }catch{} } window.scrollTo(0,scrollAntes); window._voltandoModal=false; },350); };
   ov._fechar=fechar;
   ov.addEventListener("click",e=>{ if(e.target===ov||e.target.closest(".x")||e.target.closest(".voltar")) fechar(); });
+  const vb=ov.querySelector(".vthumb");
+  if(vb) vb.onclick=async()=>{ const m=ov.querySelector(".gal .main"); ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.toggle("on",x===vb));
+    m.innerHTML='<div class="vload"><div class="spin"></div>Carregando vídeo…</div>';
+    try{ const u=await urlDoVideo(p.video); if(!ov.isConnected||!vb.classList.contains("on")) return; m.innerHTML=`<video src="${u}" controls playsinline autoplay muted loop></video>`; }
+    catch(e){ m.innerHTML='<div class="vload">Não foi possível carregar o vídeo.</div>'; } };
   const mostraFoto=i=>{ ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${fotos[i]}" alt="">`; ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.toggle("on",+x.dataset.i===i)); };
   const marcaCor=c=>{ selCor=c; ov.querySelectorAll(".csel").forEach(x=>x.classList.toggle("on",ca[+x.dataset.i]===c)); const t=$("#selCorTxt"); if(t) t.textContent=c?c.nome:"escolha"; };
-  ov.querySelectorAll(".thumbs button").forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; mostraFoto(i); const cn=(p.fotosCor||[])[i]; const c=cn&&ca.find(x=>x.nome===cn); if(c){ marcaCor(c); atualizaWa(); } });
+  ov.querySelectorAll(".thumbs button[data-i]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; mostraFoto(i); const cn=(p.fotosCor||[])[i]; const c=cn&&ca.find(x=>x.nome===cn); if(c){ marcaCor(c); atualizaWa(); } });
   const atualizaWa=()=>{ const t=$("#persoTxt")?.value.trim(); const url=location.href.split("#")[0]+"#p="+p.id; const pr=precoAtual();
     $("#comprar").href=waLink(`Olá! Tenho interesse no produto:\n*${p.nome}*${selCap?` ${selCap.cap}`:""}${pr?` — ${brl(pr)}`:""}${selCor?`\nCor: ${selCor.nome}`:""}${p.condicao?`\nCondição: ${p.condicao}`:""}${t?`\nPersonalização: "${t}"`:""}\n${url}`); };
   const tinge=()=>{ if(!selCor) return; const f=fotoParaCor(p,selCor.nome); if(f){ const i=fotos.indexOf(f); if(i>=0) return mostraFoto(i); ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${f}" alt="">`; return; }
@@ -799,8 +867,8 @@ function admProdutos(){
   $("#admBody").querySelectorAll("[data-a]").forEach(b=>b.onclick=async()=>{
     const p=S.produtos.find(x=>x.id===b.dataset.id); if(!p) return; const a=b.dataset.a;
     if(a==="edit") return formProduto(p);
-    if(a==="dup"){ const c=JSON.parse(JSON.stringify(p)); delete c.id; c.nome=p.nome+" (cópia)"; c.ativo=false; return formProduto(c,true); }
-    if(a==="del"){ if(!confirmar(`Excluir “${p.nome}”?`)) return; await DB.deleteProduto(p.id); S.produtos=S.produtos.filter(x=>x.id!==p.id); toast("Produto excluído"); return admProdutos(); }
+    if(a==="dup"){ const c=JSON.parse(JSON.stringify(p)); delete c.id; c.video=null; c.nome=p.nome+" (cópia)"; c.ativo=false; return formProduto(c,true); }
+    if(a==="del"){ if(!confirmar(`Excluir “${p.nome}”?`)) return; await DB.deleteProduto(p.id); if(p.video) DB.deleteVideo(p.video.id,p.video.n); S.produtos=S.produtos.filter(x=>x.id!==p.id); toast("Produto excluído"); return admProdutos(); }
     const np={...p}; if(a==="vis") np.ativo=p.ativo===false; if(a==="esg") np.esgotado=!p.esgotado;
     b.disabled=true; try{ await DB.saveProduto(np); Object.assign(p,np); toast("Atualizado"); }catch(e){ toast("Erro: "+e.message); } admProdutos();
   });
@@ -821,6 +889,7 @@ function formProduto(orig,ehCopia){
       <div class="fld"><label>Categoria</label><input class="inp" id="f_cat" list="catlist" value="${esc(p.categoria)}" placeholder="Escolha ou digite"><datalist id="catlist">${cats().map(c=>`<option value="${esc(c)}">`).join("")}</datalist></div>
       <div class="fld"><label>Condição</label><select class="inp" id="f_cond">${["","Novo","Lacrado","Seminovo","Vitrine"].map(c=>`<option ${p.condicao===c?"selected":""} value="${c}">${c||"— não se aplica —"}</option>`).join("")}</select></div>
     </div>
+    <div class="fsec"><div class="fsec-h"><b>🎬 Vídeo do produto</b><span>Opcional, até ${MAXV} segundos. O site compacta o vídeo sozinho antes de salvar.</span></div><div id="vidAdm"></div></div>
     <div class="fsec"><div class="fsec-h"><b>Cores</b><span>Marque as que você tem em estoque — só as marcadas aparecem no site</span></div>
       <div class="cores-adm" id="coresAdm"></div>
       <div class="add-row"><input class="inp" id="novaCorNome" placeholder="Nova cor (ex.: Azul-marinho)"><input type="color" id="novaCorHex" value="#888888" class="pick"><button type="button" class="btn btn-g btn-sm" id="addCor">Adicionar cor</button></div>
@@ -886,8 +955,21 @@ function formProduto(orig,ehCopia){
   drawCores(); drawCaps();
   $("#addCor").onclick=()=>{ const n=$("#novaCorNome").value.trim(); if(!n) return $("#novaCorNome").focus(); p.cores.push({nome:n,hex:$("#novaCorHex").value,ativo:true}); $("#novaCorNome").value=""; autoMostrar(); drawCores(); drawFotos(); };
   $("#addCap").onclick=()=>{ const n=$("#novaCap").value.trim(); if(!n) return $("#novaCap").focus(); lerPrecosCaps(); p.armaz.push({cap:n,preco:0,ativo:true}); $("#novaCap").value=""; autoMostrar(); drawCaps(); };
+  let vidNovo=null, vidRemover=false, vidOcupado=false;
+  const drawVid=()=>{
+    const box=$("#vidAdm"); if(!box) return;
+    if(vidOcupado){ box.innerHTML=`<div class="vprog"><div class="spin"></div><span id="vpct">Compactando vídeo… 0%</span><small>Deixe esta tela aberta — leva mais ou menos o tempo do vídeo.</small></div>`; return; }
+    if(vidNovo){ box.innerHTML=`<div class="vprev"><video src="${URL.createObjectURL(vidNovo.blob)}" controls playsinline muted></video><div><b>Vídeo pronto</b><small>${vidNovo.dur}s · ${(vidNovo.blob.size/1048576).toFixed(1)} MB — será enviado ao salvar</small><button type="button" class="btn btn-bad btn-sm" id="vrm">Remover vídeo</button></div></div>`; $("#vrm").onclick=()=>{ vidNovo=null; drawVid(); }; return; }
+    if(p.video && !vidRemover){ box.innerHTML=`<div class="vprev"><div class="vbox">▶</div><div><b>Vídeo cadastrado</b><small>${p.video.dur||""}s</small><div style="display:flex;gap:6px;flex-wrap:wrap"><label class="btn btn-g btn-sm">Trocar vídeo<input type="file" accept="video/*" class="fi" id="vin"></label><button type="button" class="btn btn-bad btn-sm" id="vrm">Remover vídeo</button></div></div></div>`; $("#vrm").onclick=()=>{ vidRemover=true; drawVid(); }; }
+    else box.innerHTML=`<label class="up" style="width:auto;height:auto;padding:14px 18px;grid-auto-flow:column;gap:10px"><span style="font-size:22px">🎬</span><b>Adicionar vídeo</b><input type="file" accept="video/*" class="fi" id="vin"></label>`;
+    $("#vin")?.addEventListener("change",async e=>{ const f=e.target.files[0]; if(!f) return; vidOcupado=true; drawVid(); $("#salvar").disabled=true;
+      try{ vidNovo=await comprimirVideo(f,pc=>{ const el=$("#vpct"); if(el) el.textContent=`Compactando vídeo… ${pc}%`; }); vidRemover=false; }
+      catch(err){ toast(err.message); }
+      vidOcupado=false; $("#salvar").disabled=false; drawVid(); });
+  };
+  drawVid();
   $("#pf").onsubmit=async e=>{
-    e.preventDefault(); lerPrecosCaps();
+    e.preventDefault(); if(vidOcupado){ toast("Espere o vídeo terminar de compactar"); return; } lerPrecosCaps();
     Object.assign(p,{ nome:$("#f_nome").value.trim(), categoria:$("#f_cat").value.trim(), condicao:$("#f_cond").value,
       preco:parseNum($("#f_preco").value), precoAntigo:parseNum($("#f_antigo").value), specs:$("#f_specs").value.trim(), descricao:$("#f_desc").value.trim(),
       ativo:$("#f_ativo").checked, destaque:$("#f_dest").checked, personalizavel:$("#f_pers").checked, esgotado:$("#f_esg").checked, atualizadoEm:Date.now() });
@@ -895,7 +977,11 @@ function formProduto(orig,ehCopia){
     const kb=JSON.stringify(p).length/1024;
     if(kb>950){ $("#ferr").textContent=`As fotos ficaram pesadas demais (${Math.round(kb)} KB). Remova uma ou duas fotos.`; return; }
     $("#salvar").disabled=true; $("#salvar").textContent="Salvando…";
-    try{ const saved=await DB.saveProduto(p); const i=S.produtos.findIndex(x=>x.id===saved.id); if(i>=0) S.produtos[i]=saved; else S.produtos.push(saved); toast("Produto salvo!"); fechar(); admProdutos(); }
+    try{
+      const antigo=p.video||null;
+      if(vidNovo){ $("#salvar").textContent="Enviando vídeo…"; const partes=await blobParaPartes(vidNovo.blob); const id=await DB.saveVideo(partes); p.video={id,n:partes.length,tipo:vidNovo.tipo,dur:vidNovo.dur}; if(antigo) DB.deleteVideo(antigo.id,antigo.n); }
+      else if(vidRemover && antigo){ p.video=null; DB.deleteVideo(antigo.id,antigo.n); }
+      const saved=await DB.saveProduto(p); const i=S.produtos.findIndex(x=>x.id===saved.id); if(i>=0) S.produtos[i]=saved; else S.produtos.push(saved); toast("Produto salvo!"); fechar(); admProdutos(); }
     catch(err){ $("#ferr").textContent="Erro ao salvar: "+err.message; $("#salvar").disabled=false; $("#salvar").textContent="Salvar produto"; }
   };
 }
