@@ -639,6 +639,9 @@ function renderGrid(){
   $("#grid").innerHTML = list.length?`<div class="grid">${list.map(cardHTML).join("")}</div>`:`<div class="empty">Nenhum produto encontrado${S.q?` para “${esc(S.q)}”`:""}.</div>`;
   $("#count").textContent = list.length+(list.length===1?" produto":" produtos");
 }
+function sincronizaCard(id,nome){
+  if(!nome) return; document.querySelectorAll(`.card[data-id="${id}"]`).forEach(card=>{ const sw=[...card.querySelectorAll(".cardsw")].find(x=>x.dataset.cor===nome); if(sw) trocaCorCard(sw); });
+}
 function trocaCorCard(sw){
   const card=sw.closest(".card"); const p=S.produtos.find(x=>x.id===card.dataset.id); if(!p) return;
   const nome=sw.dataset.cor, c=(p.cores||[]).find(x=>x.nome===nome); card.dataset.cor=nome;
@@ -650,6 +653,7 @@ function trocaCorCard(sw){
 function abrirProduto(id,doClique,corIni){
   const p=S.produtos.find(x=>x.id===id); if(!p) return;
   document.querySelectorAll(".ov").forEach(o=>o.remove());
+  const scrollAntes=window.scrollY;
   let pushed=false; if(doClique){ try{ history.pushState(null,"","#p="+id); pushed=true; }catch{} }
   const fotos=p.fotos||[]; const ca=coresAtivas(p), aa=capsAtivas(p);
   let selCor=ca.find(c=>c.nome===corIni)||(ca.length===1?ca[0]:null), selCap=aa.length?(aa.filter(a=>a.preco>0).sort((x,y)=>x.preco-y.preco)[0]||aa[0]):null;
@@ -676,8 +680,10 @@ function abrirProduto(id,doClique,corIni){
       <button class="btn btn-g btn-sm" id="share" style="justify-self:start">Compartilhar produto</button>
     </div></div></div>`;
   document.body.appendChild(ov); document.body.style.overflow="hidden";
-  const fechar=()=>{ ov.remove(); document.body.style.overflow="";
-    if(location.hash.startsWith("#p=")){ if(pushed){ try{ history.back(); }catch{} } else { try{ history.replaceState(null,"",location.pathname+location.search); }catch{} } } };
+  const fechar=()=>{ if(!ov.isConnected) return; ov.remove(); document.body.style.overflow="";
+    sincronizaCard(p.id, selCor&&selCor.nome);
+    if(location.hash.startsWith("#p=")){ window._voltandoModal=true; if(pushed){ try{ history.back(); }catch{} } else { try{ history.replaceState(null,"",location.pathname+location.search); }catch{} } }
+    window.scrollTo(0,scrollAntes); setTimeout(()=>{ window.scrollTo(0,scrollAntes); window._voltandoModal=false; },350); };
   ov._fechar=fechar;
   ov.addEventListener("click",e=>{ if(e.target===ov||e.target.closest(".x")||e.target.closest(".voltar")) fechar(); });
   const mostraFoto=i=>{ ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${fotos[i]}" alt="">`; ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.toggle("on",+x.dataset.i===i)); };
@@ -970,8 +976,8 @@ function rota(){
   if(modoAtual!=="site"){ modoAtual="site"; renderSite(); }
   if(!h.startsWith("#p=")){ document.querySelectorAll(".ov").forEach(o=>o.remove()); document.body.style.overflow=""; }
   if(h.startsWith("#p=")){ if(!document.querySelector(".ov")) abrirProduto(h.slice(3)); }
-  else if(h.startsWith("#cat=")) setCat(decodeURIComponent(h.slice(5)),true);
-  else if(h && h.length>1 && document.querySelector(h)) document.querySelector(h).scrollIntoView();
+  else if(h.startsWith("#cat=")){ const c=decodeURIComponent(h.slice(5)); if(S.cat!==c) setCat(c,!window._voltandoModal); }
+  else if(h && h.length>1 && !window._voltandoModal && document.querySelector(h)) document.querySelector(h).scrollIntoView();
 }
 addEventListener("popstate",()=>rota());
 addEventListener("hashchange",()=>{ if(location.hash==="#"||location.hash===""){ if(modoAtual==="admin"){ modoAtual=""; } } rota(); });
