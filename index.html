@@ -324,6 +324,11 @@ textarea.inp{min-height:96px;resize:vertical}
 .card .ph:has(img)::after,.gal .main:has(img)::after{content:"Imagem meramente ilustrativa";position:absolute;left:50%;bottom:8px;transform:translateX(-50%);white-space:nowrap;font-size:10px;font-weight:500;letter-spacing:.01em;color:#fff;background:rgba(0,0,0,.42);padding:2px 8px;border-radius:999px;pointer-events:none;z-index:2}
 .gal .main:has(img)::after{font-size:11px;bottom:10px}
 @media(max-width:560px){.card .ph:has(img)::after{font-size:8.5px;padding:2px 6px;bottom:6px}}
+.pctab{overflow-x:auto}
+.pctab table{border-collapse:separate;border-spacing:6px;font-size:13px}
+.pctab th{text-align:left;color:var(--mut);font-weight:600;font-size:12px;padding:0 4px}
+.pctab td .inp{padding:7px 9px;min-width:96px;font-size:14px}
+.pcc{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .cardsw{padding:2px;border-radius:50%;border:1.5px solid transparent;line-height:0}
 .cardsw.on{border-color:var(--tx)}
 .cfoto{width:22px;height:22px;border-radius:50%;object-fit:cover;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
@@ -412,8 +417,12 @@ const fotoParaCor = (p,nome) => fotoDaCor(p,nome) || fotoGeral(p);
 const capa = p => (p.fotos&&p.fotos[0]) || ((p.cores||[]).find(c=>c.ativo&&c.foto)||(p.cores||[]).find(c=>c.foto)||{}).foto || "";
 const coresAtivas = p => (p.cores||[]).filter(c=>c.ativo);
 const capsAtivas = p => (p.armaz||[]).filter(a=>a.ativo);
-function precoBase(p){ const ps=capsAtivas(p).map(a=>a.preco).filter(v=>v>0); return ps.length?Math.min(...ps):(p.preco||0); }
-const variosPrecos = p => new Set(capsAtivas(p).map(a=>a.preco).filter(v=>v>0)).size>1;
+function precoDe(p,cor,cap){ const a=cap?capsAtivas(p).find(x=>x.cap===cap):null; const base=a&&a.preco>0?a.preco:(p.preco||0);
+  if(p.precoPorCor&&cor&&p.precoCor){ const v=p.precoCor[cor+"|"+(cap||"")]; if(v>0) return v; } return base; }
+function precosPossiveis(p,cap,cor){ const cl=cor?[cor]:(coresAtivas(p).length?coresAtivas(p).map(c=>c.nome):[null]); const al=cap?[cap]:(capsAtivas(p).length?capsAtivas(p).map(a=>a.cap):[null]);
+  const out=[]; cl.forEach(c=>al.forEach(a=>{ const v=precoDe(p,c,a); if(v>0) out.push(v); })); return out; }
+function precoBase(p){ const v=precosPossiveis(p); return v.length?Math.min(...v):(p.preco||0); }
+const variosPrecos = p => new Set(precosPossiveis(p)).size>1;
 const swatch = (c,sz=14) => `<i class="sw" title="${esc(c.nome)}" style="--c:${esc(c.hex)};width:${sz}px;height:${sz}px"></i>`;
 
 const CATS_PADRAO = ["iPhone","iPad","Mac","Apple Watch","AirPods","Acessórios","Copos personalizados","Gravação a laser"];
@@ -602,8 +611,10 @@ function waLink(msg){ const n=onlyDigits(S.loja.whatsapp); const num = n ? (n.le
    SITE PÚBLICO
    ============================================================ */
 function cardHTML(p){
-  const capF=S.fc&&S.fc.cap?capsAtivas(p).find(x=>x.cap===S.fc.cap&&x.preco>0):null;
-  const pb=capF?capF.preco:precoBase(p), ca=coresAtivas(p);
+  const fCap=S.fc&&S.fc.cap&&capsAtivas(p).some(x=>x.cap===S.fc.cap)?S.fc.cap:null;
+  const fCor=S.fc&&S.fc.cor&&coresAtivas(p).some(c=>c.nome===S.fc.cor)?S.fc.cor:null;
+  const vals=precosPossiveis(p,fCap,fCor); const varios=new Set(vals).size>1;
+  const pb=vals.length?Math.min(...vals):(p.preco||0), ca=coresAtivas(p);
   const off = p.precoAntigo>pb && pb ? Math.round((1-pb/p.precoAntigo)*100) : 0;
   const tags=[ p.esgotado?'<span class="tag no">Esgotado</span>':"", off?`<span class="tag off">-${off}%</span>`:"", p.condicao?`<span class="tag">${esc(p.condicao)}</span>`:"", p.personalizavel?'<span class="tag laser">Personalizável</span>':"", p.video?'<span class="tag vid">▶ Vídeo</span>':"" ].join("");
   return `<article class="card ${p.esgotado?"sold":""}" data-id="${p.id}">
@@ -611,7 +622,7 @@ function cardHTML(p){
     <div class="ph">${capa(p)?`<img loading="lazy" src="${capa(p)}" alt="${esc(p.nome)}">`:PH(p.categoria)}</div>
     <div class="bd"><div class="cat">${esc(p.categoria||"")}</div><h3>${esc(p.nome)}</h3>
       ${ca.length?`<div class="swrow">${ca.slice(0,7).map(c=>`<button type="button" class="cardsw" data-cor="${esc(c.nome)}" aria-label="${esc(c.nome)}" title="${esc(c.nome)}">${swatch(c,16)}</button>`).join("")}${ca.length>7?`<small>+${ca.length-7}</small>`:""}</div>`:""}
-      <div class="price">${pb?`${variosPrecos(p)&&!capF?'<small class="apartir">a partir de</small>':capF?`<small class="apartir">${esc(capF.cap)}</small>`:""}<b>${brl(pb)}</b>`:"<b>Consulte</b>"}${off?`<s>${brl(p.precoAntigo)}</s>`:""}</div>
+      <div class="price">${pb?`${varios?'<small class="apartir">a partir de</small>':fCap?`<small class="apartir">${esc(fCap)}</small>`:""}<b>${brl(pb)}</b>`:"<b>Consulte</b>"}${off?`<s>${brl(p.precoAntigo)}</s>`:""}</div>
       ${pb&&S.loja.parcelas?`<div class="inst">${esc(S.loja.parcelas)}</div>`:""}
     </div></article>`;
 }
@@ -751,6 +762,7 @@ function trocaCorCard(sw){
   const card=sw.closest(".card"); const p=S.produtos.find(x=>x.id===card.dataset.id); if(!p) return;
   const nome=sw.dataset.cor, c=(p.cores||[]).find(x=>x.nome===nome); card.dataset.cor=nome;
   card.querySelectorAll(".cardsw").forEach(x=>x.classList.toggle("on",x===sw));
+  const pr=card.querySelector(".price b"); if(pr){ const fCap=S.fc&&S.fc.cap&&capsAtivas(p).some(x=>x.cap===S.fc.cap)?S.fc.cap:null; const vs=precosPossiveis(p,fCap,nome); if(vs.length){ pr.textContent=brl(Math.min(...vs)); const ap=card.querySelector(".apartir"); if(new Set(vs).size>1){ if(ap) ap.textContent="a partir de"; } else if(ap && !fCap) ap.remove(); } }
   const ph=card.querySelector(".ph"), f=fotoParaCor(p,nome);
   if(f) ph.innerHTML=`<img src="${f}" alt="${esc(p.nome)} ${esc(nome)}">`;
   else { ph.innerHTML=PH(p.categoria); const sv=ph.querySelector("svg"); if(sv&&c){ sv.style.color=c.hex; sv.style.opacity="1"; sv.style.filter="drop-shadow(0 0 1px rgba(0,0,0,.35))"; } }
@@ -762,7 +774,8 @@ function abrirProduto(id,doClique,corIni){
   let pushed=false; if(doClique){ try{ history.pushState(null,"","#p="+id); pushed=true; }catch{} }
   const fotos=p.fotos||[]; const ca=coresAtivas(p), aa=capsAtivas(p);
   let selCor=ca.find(c=>c.nome===corIni)||ca.find(c=>S.fc&&c.nome===S.fc.cor)||(ca.length===1?ca[0]:null), selCap=aa.find(a=>S.fc&&a.cap===S.fc.cap)||(aa.length?(aa.filter(a=>a.preco>0).sort((x,y)=>x.preco-y.preco)[0]||aa[0]):null);
-  const precoAtual=()=> selCap&&selCap.preco>0 ? selCap.preco : precoBase(p);
+  const precoAtual=()=>{ const vs=precosPossiveis(p,selCap&&selCap.cap,selCor&&selCor.nome); return vs.length?Math.min(...vs):(p.preco||0); };
+  const precoVaria=()=>!selCor && new Set(precosPossiveis(p,selCap&&selCap.cap)).size>1;
   const off=p.precoAntigo>precoAtual()&&precoAtual()?Math.round((1-precoAtual()/p.precoAntigo)*100):0;
   const specs=(p.specs||"").split("\n").map(s=>{const i=s.indexOf(":"); return i>0?[s.slice(0,i).trim(),s.slice(i+1).trim()]:[s.trim(),""];}).filter(x=>x[0]);
   if(p.condicao) specs.unshift(["Condição",p.condicao]);
@@ -776,7 +789,7 @@ function abrirProduto(id,doClique,corIni){
       <div class="price" id="mprice">${precoAtual()?`<b>${brl(precoAtual())}</b>`:"<b>Sob consulta</b>"}${off?`<s>${brl(p.precoAntigo)}</s> <span class="tag off" style="position:static">-${off}%</span>`:""}</div>
       ${precoAtual()&&S.loja.parcelas?`<div style="color:var(--mut);font-size:14px;margin-top:-8px">${esc(S.loja.parcelas)}</div>`:""}
       ${ca.length?`<div class="opts"><div class="opt-h">Cor: <b id="selCorTxt">${selCor?esc(selCor.nome):"escolha"}</b></div><div class="cores-sel">${ca.map((c,i)=>`<button type="button" class="csel ${selCor===c?"on":""}" data-i="${i}" aria-label="${esc(c.nome)}">${swatch(c,30)}</button>`).join("")}</div></div>`:""}
-      ${aa.length?`<div class="opts"><div class="opt-h">Armazenamento</div><div class="caps-sel">${aa.map((a,i)=>`<button type="button" class="capsel ${selCap===a?"on":""}" data-i="${i}"><b>${esc(a.cap)}</b>${a.preco>0?`<small>${brl(a.preco)}</small>`:""}</button>`).join("")}</div></div>`:""}
+      ${aa.length?`<div class="opts"><div class="opt-h">Armazenamento</div><div class="caps-sel">${aa.map((a,i)=>`<button type="button" class="capsel ${selCap===a?"on":""}" data-i="${i}"><b>${esc(a.cap)}</b><small data-cp="${i}"></small></button>`).join("")}</div></div>`:""}
       ${p.esgotado?'<div class="note">Produto esgotado no momento. Fale com a gente para saber quando chega.</div>':""}
       ${p.personalizavel?`<div class="perso"><label for="persoTxt">✨ Personalize o seu</label><input class="inp" id="persoTxt" maxlength="80" placeholder="Nome, frase ou ideia para gravar"><small>Também dá para mandar a sua logo pelo WhatsApp.</small></div>`:""}
       <a class="btn btn-wa" id="comprar" target="_blank" rel="noopener" href="#">${WA_SVG.replace("<svg",'<svg width="20" height="20" fill="#fff"')} ${p.esgotado?"Avise-me quando chegar":"Quero este produto"}</a>
@@ -798,17 +811,19 @@ function abrirProduto(id,doClique,corIni){
     catch(e){ m.innerHTML='<div class="vload">Não foi possível carregar o vídeo.</div>'; } };
   const mostraFoto=i=>{ ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${fotos[i]}" alt="">`; ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.toggle("on",+x.dataset.i===i)); };
   const marcaCor=c=>{ selCor=c; ov.querySelectorAll(".csel").forEach(x=>x.classList.toggle("on",ca[+x.dataset.i]===c)); const t=$("#selCorTxt"); if(t) t.textContent=c?c.nome:"escolha"; };
-  ov.querySelectorAll(".thumbs button[data-i]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; mostraFoto(i); const cn=(p.fotosCor||[])[i]; const c=cn&&ca.find(x=>x.nome===cn); if(c){ marcaCor(c); atualizaWa(); } });
+  ov.querySelectorAll(".thumbs button[data-i]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; mostraFoto(i); const cn=(p.fotosCor||[])[i]; const c=cn&&ca.find(x=>x.nome===cn); if(c){ marcaCor(c); if(typeof atualizaPreco==="function") atualizaPreco(); atualizaWa(); } });
   const atualizaWa=()=>{ const t=$("#persoTxt")?.value.trim(); const url=location.href.split("#")[0]+"#p="+p.id; const pr=precoAtual();
     $("#comprar").href=waLink(`Olá! Tenho interesse no produto:\n*${p.nome}*${selCap?` ${selCap.cap}`:""}${pr?` — ${brl(pr)}`:""}${selCor?`\nCor: ${selCor.nome}`:""}${p.condicao?`\nCondição: ${p.condicao}`:""}${t?`\nPersonalização: "${t}"`:""}\n${url}`); };
   const tinge=()=>{ if(!selCor) return; const f=fotoParaCor(p,selCor.nome); if(f){ const i=fotos.indexOf(f); if(i>=0) return mostraFoto(i); ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${f}" alt="">`; return; }
     ov.querySelector(".gal .main").innerHTML=PH(p.categoria); ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.remove("on"));
     const sv=ov.querySelector(".gal .main svg"); if(sv&&selCor){ sv.style.color=selCor.hex; sv.style.opacity="1"; sv.style.filter="drop-shadow(0 0 1px rgba(0,0,0,.35))"; } };
   tinge();
-  ov.querySelectorAll(".csel").forEach(b=>b.onclick=e=>{ e.preventDefault(); e.stopPropagation(); marcaCor(ca[+b.dataset.i]); tinge(); atualizaWa(); });
-  ov.querySelectorAll(".capsel").forEach(b=>b.onclick=()=>{ selCap=aa[+b.dataset.i]; ov.querySelectorAll(".capsel").forEach(x=>x.classList.toggle("on",x===b));
-    const pr=precoAtual(), o=p.precoAntigo>pr&&pr?Math.round((1-pr/p.precoAntigo)*100):0;
-    $("#mprice").innerHTML = pr?`<b>${brl(pr)}</b>${o?`<s>${brl(p.precoAntigo)}</s> <span class="tag off" style="position:static">-${o}%</span>`:""}`:"<b>Sob consulta</b>"; atualizaWa(); });
+  const atualizaPreco=()=>{ const pr=precoAtual(), o=p.precoAntigo>pr&&pr?Math.round((1-pr/p.precoAntigo)*100):0;
+    $("#mprice").innerHTML = pr?`${precoVaria()?'<small class="apartir" style="width:100%">a partir de</small>':""}<b>${brl(pr)}</b>${o?`<s>${brl(p.precoAntigo)}</s> <span class="tag off" style="position:static">-${o}%</span>`:""}`:"<b>Sob consulta</b>";
+    ov.querySelectorAll("[data-cp]").forEach(sm=>{ const a=aa[+sm.dataset.cp]; const vs=precosPossiveis(p,a.cap,selCor&&selCor.nome); sm.textContent=vs.length?((!selCor&&new Set(vs).size>1)?"a partir de "+brl(Math.min(...vs)):brl(Math.min(...vs))):""; }); };
+  atualizaPreco();
+  ov.querySelectorAll(".csel").forEach(b=>b.onclick=e=>{ e.preventDefault(); e.stopPropagation(); marcaCor(ca[+b.dataset.i]); tinge(); atualizaPreco(); atualizaWa(); });
+  ov.querySelectorAll(".capsel").forEach(b=>b.onclick=()=>{ selCap=aa[+b.dataset.i]; ov.querySelectorAll(".capsel").forEach(x=>x.classList.toggle("on",x===b)); atualizaPreco(); atualizaWa(); });
   atualizaWa(); $("#persoTxt")?.addEventListener("input",atualizaWa);
   $("#share").onclick=async()=>{ const url=location.href.split("#")[0]+"#p="+p.id; try{ if(navigator.share) await navigator.share({title:p.nome,url}); else { await navigator.clipboard.writeText(url); toast("Link copiado!"); } }catch{} };
   const esc_=e=>{ if(e.key==="Escape"){ fechar(); removeEventListener("keydown",esc_);} }; addEventListener("keydown",esc_);
@@ -939,6 +954,7 @@ function formProduto(orig,ehCopia){
       <div class="caps-adm" id="capsAdm"></div>
       <div class="add-row"><input class="inp" id="novaCap" placeholder="Nova opção (ex.: 128 GB)"><button type="button" class="btn btn-g btn-sm" id="addCap">Adicionar opção</button></div>
     </div>
+    <div class="fsec"><div class="fsec-h"><b>💲 Preço por cor</b><span>Use quando alguma cor tem valor diferente</span></div><div id="pcAdm"></div></div>
     <div class="row">
       <div class="fld"><label id="lblPreco">Preço (R$)</label><input class="inp" id="f_preco" type="text" inputmode="decimal" value="${numStr(p.preco)}" placeholder="0,00 (vazio = Consulte)"></div>
       <div class="fld"><label>Preço antigo / “de” (opcional)</label><input class="inp" id="f_antigo" type="text" inputmode="decimal" value="${numStr(p.precoAntigo)}" placeholder="Mostra o desconto"></div>
@@ -976,7 +992,7 @@ function formProduto(orig,ehCopia){
   };
   drawFotos();
   const autoMostrar=()=>{ if(!$("#f_ativo").checked){ $("#f_ativo").checked=true; const c=$("#chkAtivo"); c.classList.add("flash"); setTimeout(()=>c.classList.remove("flash"),1200); } };
-  const drawCores=()=>{
+  const drawCores0=()=>{
     $("#coresAdm").innerHTML = p.cores.length ? `<div class="cores-tools"><button type="button" class="lnk" data-all="1">Marcar todas</button><button type="button" class="lnk" data-all="0">Desmarcar todas</button></div>`+
       p.cores.map((c,i)=>`<label class="cchip ${c.ativo?"on":""}"><input type="checkbox" data-ci="${i}" ${c.ativo?"checked":""}>${fotoDaCor(p,c.nome)?`<img class="cfoto" src="${fotoDaCor(p,c.nome)}" alt="">`:swatch(c,22)}<span>${esc(c.nome)}</span><button type="button" class="rm" data-cr="${i}" title="Remover cor">×</button></label>`).join("")
       : '<p class="hint">Nenhuma cor cadastrada. Adicione abaixo (opcional).</p>';
@@ -985,7 +1001,7 @@ function formProduto(orig,ehCopia){
     $("#coresAdm").querySelectorAll("[data-all]").forEach(x=>x.onclick=()=>{ p.cores.forEach(c=>c.ativo=x.dataset.all==="1"); if(x.dataset.all==="1") autoMostrar(); drawCores(); });
   };
   const lerPrecosCaps=()=>{ $("#capsAdm").querySelectorAll("[data-pi]").forEach(x=>{ p.armaz[+x.dataset.pi].preco=parseNum(x.value); }); };
-  const drawCaps=()=>{
+  const drawCaps0=()=>{
     $("#capsAdm").innerHTML = p.armaz.length ? p.armaz.map((a,i)=>`<div class="caprow ${a.ativo?"on":""}"><label><input type="checkbox" data-ai="${i}" ${a.ativo?"checked":""}><b>${esc(a.cap)}</b></label><input class="inp" data-pi="${i}" type="text" inputmode="decimal" placeholder="Preço (R$)" value="${numStr(a.preco)}"><button type="button" class="rm" data-ar="${i}" title="Remover">×</button></div>`).join("")
       : '<p class="hint">Sem opções de armazenamento. Use o campo “Preço” abaixo.</p>';
     $("#capsAdm").querySelectorAll("[data-ai]").forEach(x=>x.onchange=()=>{ lerPrecosCaps(); p.armaz[+x.dataset.ai].ativo=x.checked; if(x.checked) autoMostrar(); drawCaps(); });
@@ -993,7 +1009,19 @@ function formProduto(orig,ehCopia){
     $("#capsAdm").querySelectorAll("[data-pi]").forEach(x=>x.oninput=()=>{ const a=p.armaz[+x.dataset.pi]; if(parseNum(x.value)>0 && !a.ativo){ a.ativo=true; x.closest(".caprow").classList.add("on"); x.closest(".caprow").querySelector("[data-ai]").checked=true; autoMostrar(); } });
     $("#lblPreco").textContent = p.armaz.length ? "Preço (R$) — usado só se não preencher por armazenamento" : "Preço (R$)";
   };
+  const lerPC=()=>{ const box=$("#pcAdm"); if(!box) return; p.precoCor=p.precoCor||{}; box.querySelectorAll("[data-pk]").forEach(x=>{ const v=parseNum(x.value); if(v>0) p.precoCor[x.dataset.pk]=v; else delete p.precoCor[x.dataset.pk]; }); };
+  const drawPC=()=>{ const box=$("#pcAdm"); if(!box) return; lerPC();
+    const on=!!p.precoPorCor, cs=p.cores.filter(c=>c.ativo), as=p.armaz.filter(a=>a.ativo);
+    let h=`<label class="chk" style="width:max-content"><input type="checkbox" id="pcOn" ${on?"checked":""}> Preço diferente por cor</label>`;
+    if(on){ if(!cs.length) h+='<p class="hint">Marque as cores em estoque primeiro.</p>'; else {
+      const cols=as.length?as:[{cap:"",preco:parseNum($("#f_preco")?.value)}];
+      h+=`<div class="pctab"><table><thead><tr><th>Cor</th>${cols.map(a=>`<th>${a.cap?esc(a.cap):"Preço"}</th>`).join("")}</tr></thead><tbody>${cs.map(c=>`<tr><td><span class="pcc">${swatch(c,14)} ${esc(c.nome)}</span></td>${cols.map(a=>{ const k=c.nome+"|"+a.cap; const v=(p.precoCor||{})[k]; return `<td><input class="inp" data-pk="${esc(k)}" type="text" inputmode="decimal" placeholder="${a.preco>0?numStr(a.preco):"normal"}" value="${v>0?numStr(v):""}"></td>`; }).join("")}</tr>`).join("")}</tbody></table></div><p class="hint">Preencha só as cores com valor diferente. Vazio = preço normal (em cinza).</p>`; } }
+    box.innerHTML=h; $("#pcOn").onchange=e=>{ p.precoPorCor=e.target.checked; drawPC(); }; };
+  const drawCores=()=>{ drawCores0(); drawPC(); };
+  const drawCaps=()=>{ drawCaps0(); drawPC(); };
   drawCores(); drawCaps();
+  $("#capsAdm").addEventListener("change",()=>{ lerPrecosCaps(); drawPC(); });
+  $("#f_preco").addEventListener("change",()=>drawPC());
   $("#addCor").onclick=()=>{ const n=$("#novaCorNome").value.trim(); if(!n) return $("#novaCorNome").focus(); p.cores.push({nome:n,hex:$("#novaCorHex").value,ativo:true}); $("#novaCorNome").value=""; autoMostrar(); drawCores(); drawFotos(); };
   $("#addCap").onclick=()=>{ const n=$("#novaCap").value.trim(); if(!n) return $("#novaCap").focus(); lerPrecosCaps(); p.armaz.push({cap:n,preco:0,ativo:true}); $("#novaCap").value=""; autoMostrar(); drawCaps(); };
   let vidNovo=null, vidRemover=false, vidOcupado=false;
@@ -1010,7 +1038,7 @@ function formProduto(orig,ehCopia){
   };
   drawVid();
   $("#pf").onsubmit=async e=>{
-    e.preventDefault(); if(vidOcupado){ toast("Espere o vídeo terminar de compactar"); return; } lerPrecosCaps();
+    e.preventDefault(); if(vidOcupado){ toast("Espere o vídeo terminar de compactar"); return; } lerPrecosCaps(); lerPC(); if(!p.precoPorCor) p.precoCor={};
     Object.assign(p,{ nome:$("#f_nome").value.trim(), categoria:$("#f_cat").value.trim(), condicao:$("#f_cond").value,
       preco:parseNum($("#f_preco").value), precoAntigo:parseNum($("#f_antigo").value), specs:$("#f_specs").value.trim(), descricao:$("#f_desc").value.trim(),
       ativo:$("#f_ativo").checked, destaque:$("#f_dest").checked, personalizavel:$("#f_pers").checked, esgotado:$("#f_esg").checked, atualizadoEm:Date.now() });
