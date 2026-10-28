@@ -291,6 +291,12 @@ textarea.inp{min-height:96px;resize:vertical}
 .foto .capa{position:absolute;top:4px;left:4px;font-size:10px;background:var(--p);color:var(--p-ink);padding:2px 6px;border-radius:6px;font-weight:700}
 .up{width:110px;height:110px;border-radius:16px;border:2px dashed var(--a);background:color-mix(in srgb,var(--a) 10%,var(--card));display:grid;place-content:center;justify-items:center;gap:4px;color:var(--tx);font-size:13px;text-align:center;cursor:pointer;padding:6px;position:relative}
 .fi{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.fwrap{display:grid;gap:5px;width:110px}
+.fwrap .foto{width:110px;height:110px}
+.fcor{display:flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:10px;padding:3px 6px;background:var(--card)}
+.fcor select{border:0;background:none;font-size:12px;width:100%;outline:0;padding:2px 0}
+.cardsw{padding:2px;border-radius:50%;border:1.5px solid transparent;line-height:0}
+.cardsw.on{border-color:var(--tx)}
 .cfoto{width:22px;height:22px;border-radius:50%;object-fit:cover;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
 .cam{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:14px;background:color-mix(in srgb,var(--tx) 7%,transparent)}
 .cam.tem{background:var(--a);}
@@ -371,6 +377,7 @@ function catalogoIphones(){
     destaque:false, ativo:false, esgotado:false, personalizavel:false, modelo:true,
     cores:CORES[ck].map(c=>({...c,ativo:false})), armaz:caps.split(",").map(c=>({cap:c,preco:0,ativo:false})), criadoEm:base+i*1000 }));
 }
+const fotoDaCor = (p,nome) => { if(!nome) return ""; const i=(p.fotosCor||[]).indexOf(nome); if(i>=0 && p.fotos&&p.fotos[i]) return p.fotos[i]; return ((p.cores||[]).find(c=>c.nome===nome)||{}).foto||""; };
 const capa = p => (p.fotos&&p.fotos[0]) || ((p.cores||[]).find(c=>c.ativo&&c.foto)||(p.cores||[]).find(c=>c.foto)||{}).foto || "";
 const coresAtivas = p => (p.cores||[]).filter(c=>c.ativo);
 const capsAtivas = p => (p.armaz||[]).filter(a=>a.ativo);
@@ -520,7 +527,7 @@ function cardHTML(p){
     <div class="tags">${tags}</div>
     <div class="ph">${capa(p)?`<img loading="lazy" src="${capa(p)}" alt="${esc(p.nome)}">`:PH(p.categoria)}</div>
     <div class="bd"><div class="cat">${esc(p.categoria||"")}</div><h3>${esc(p.nome)}</h3>
-      ${ca.length?`<div class="swrow">${ca.slice(0,7).map(c=>swatch(c)).join("")}${ca.length>7?`<small>+${ca.length-7}</small>`:""}</div>`:""}
+      ${ca.length?`<div class="swrow">${ca.slice(0,7).map(c=>`<button type="button" class="cardsw" data-cor="${esc(c.nome)}" aria-label="${esc(c.nome)}" title="${esc(c.nome)}">${swatch(c,16)}</button>`).join("")}${ca.length>7?`<small>+${ca.length-7}</small>`:""}</div>`:""}
       <div class="price">${pb?`${variosPrecos(p)?'<small class="apartir">a partir de</small>':""}<b>${brl(pb)}</b>`:"<b>Consulte</b>"}${off?`<s>${brl(p.precoAntigo)}</s>`:""}</div>
       ${pb&&S.loja.parcelas?`<div class="inst">${esc(S.loja.parcelas)}</div>`:""}
     </div></article>`;
@@ -564,7 +571,8 @@ function renderSite(){
   initCarrossel();
   $("#app").addEventListener("click",e=>{
     const t=e.target.closest(".cat-t"); if(t){ e.preventDefault(); setCat(t.dataset.c,true); try{ history.replaceState(null,"","#cat="+encodeURIComponent(t.dataset.c)); }catch{} return; }
-    const c=e.target.closest(".card"); if(c){ abrirProduto(c.dataset.id,true); }
+    const sw=e.target.closest(".cardsw"); if(sw){ e.preventDefault(); e.stopPropagation(); trocaCorCard(sw); return; }
+    const c=e.target.closest(".card"); if(c){ abrirProduto(c.dataset.id,true,c.dataset.cor||""); }
   });
 }
 function heroTitle(t){ t=esc(t||""); const w=t.split(" "); if(w.length<3) return t; const k=Math.ceil(w.length/2); return w.slice(0,k).join(" ")+" <span>"+w.slice(k).join(" ")+"</span>"; }
@@ -629,19 +637,27 @@ function renderGrid(){
   $("#grid").innerHTML = list.length?`<div class="grid">${list.map(cardHTML).join("")}</div>`:`<div class="empty">Nenhum produto encontrado${S.q?` para “${esc(S.q)}”`:""}.</div>`;
   $("#count").textContent = list.length+(list.length===1?" produto":" produtos");
 }
-function abrirProduto(id,doClique){
+function trocaCorCard(sw){
+  const card=sw.closest(".card"); const p=S.produtos.find(x=>x.id===card.dataset.id); if(!p) return;
+  const nome=sw.dataset.cor, c=(p.cores||[]).find(x=>x.nome===nome); card.dataset.cor=nome;
+  card.querySelectorAll(".cardsw").forEach(x=>x.classList.toggle("on",x===sw));
+  const ph=card.querySelector(".ph"), f=fotoDaCor(p,nome);
+  if(f) ph.innerHTML=`<img src="${f}" alt="${esc(p.nome)} ${esc(nome)}">`;
+  else { if(!ph.querySelector("svg")) ph.innerHTML = capa(p)?`<img src="${capa(p)}" alt="">`:PH(p.categoria); const sv=ph.querySelector("svg"); if(sv&&c){ sv.style.color=c.hex; sv.style.opacity="1"; sv.style.filter="drop-shadow(0 0 1px rgba(0,0,0,.35))"; } }
+}
+function abrirProduto(id,doClique,corIni){
   const p=S.produtos.find(x=>x.id===id); if(!p) return;
   document.querySelectorAll(".ov").forEach(o=>o.remove());
   let pushed=false; if(doClique){ try{ history.pushState(null,"","#p="+id); pushed=true; }catch{} }
   const fotos=p.fotos||[]; const ca=coresAtivas(p), aa=capsAtivas(p);
-  let selCor=ca.length===1?ca[0]:null, selCap=aa.length?(aa.filter(a=>a.preco>0).sort((x,y)=>x.preco-y.preco)[0]||aa[0]):null;
+  let selCor=ca.find(c=>c.nome===corIni)||(ca.length===1?ca[0]:null), selCap=aa.length?(aa.filter(a=>a.preco>0).sort((x,y)=>x.preco-y.preco)[0]||aa[0]):null;
   const precoAtual=()=> selCap&&selCap.preco>0 ? selCap.preco : precoBase(p);
   const off=p.precoAntigo>precoAtual()&&precoAtual()?Math.round((1-precoAtual()/p.precoAntigo)*100):0;
   const specs=(p.specs||"").split("\n").map(s=>{const i=s.indexOf(":"); return i>0?[s.slice(0,i).trim(),s.slice(i+1).trim()]:[s.trim(),""];}).filter(x=>x[0]);
   if(p.condicao) specs.unshift(["Condição",p.condicao]);
   const ov=document.createElement("div"); ov.className="ov";
   ov.innerHTML=`<div class="md" role="dialog" aria-label="${esc(p.nome)}"><div class="mbar"><button class="voltar" type="button">‹ Voltar</button><button class="x" type="button" aria-label="Fechar">×</button></div><div class="pd">
-    <div class="gal"><div class="main">${(selCor&&selCor.foto)||capa(p)?`<img id="mainimg" src="${(selCor&&selCor.foto)||capa(p)}" alt="${esc(p.nome)}">`:PH(p.categoria)}</div>
+    <div class="gal"><div class="main">${capa(p)?`<img id="mainimg" src="${capa(p)}" alt="${esc(p.nome)}">`:PH(p.categoria)}</div>
       ${fotos.length>1?`<div class="thumbs">${fotos.map((f,i)=>`<button class="${i?"":"on"}" data-i="${i}"><img src="${f}" alt=""></button>`).join("")}</div>`:""}</div>
     <div class="info">
       <div class="cat" style="color:var(--mut);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">${esc(p.categoria||"")}</div>
@@ -662,13 +678,15 @@ function abrirProduto(id,doClique){
     if(location.hash.startsWith("#p=")){ if(pushed){ try{ history.back(); }catch{} } else { try{ history.replaceState(null,"",location.pathname+location.search); }catch{} } } };
   ov._fechar=fechar;
   ov.addEventListener("click",e=>{ if(e.target===ov||e.target.closest(".x")||e.target.closest(".voltar")) fechar(); });
-  ov.querySelectorAll(".thumbs button").forEach(b=>b.onclick=()=>{ ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${fotos[b.dataset.i]}" alt="">`; ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.toggle("on",x===b)); });
+  const mostraFoto=i=>{ ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${fotos[i]}" alt="">`; ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.toggle("on",+x.dataset.i===i)); };
+  const marcaCor=c=>{ selCor=c; ov.querySelectorAll(".csel").forEach(x=>x.classList.toggle("on",ca[+x.dataset.i]===c)); const t=$("#selCorTxt"); if(t) t.textContent=c?c.nome:"escolha"; };
+  ov.querySelectorAll(".thumbs button").forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; mostraFoto(i); const cn=(p.fotosCor||[])[i]; const c=cn&&ca.find(x=>x.nome===cn); if(c){ marcaCor(c); atualizaWa(); } });
   const atualizaWa=()=>{ const t=$("#persoTxt")?.value.trim(); const url=location.href.split("#")[0]+"#p="+p.id; const pr=precoAtual();
     $("#comprar").href=waLink(`Olá! Tenho interesse no produto:\n*${p.nome}*${selCap?` ${selCap.cap}`:""}${pr?` — ${brl(pr)}`:""}${selCor?`\nCor: ${selCor.nome}`:""}${p.condicao?`\nCondição: ${p.condicao}`:""}${t?`\nPersonalização: "${t}"`:""}\n${url}`); };
-  const tinge=()=>{ if(selCor&&selCor.foto){ const m=ov.querySelector(".gal .main"); m.innerHTML=`<img id="mainimg" src="${selCor.foto}" alt="">`; ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.remove("on")); return; }
+  const tinge=()=>{ const f=selCor&&fotoDaCor(p,selCor.nome); if(f){ const i=fotos.indexOf(f); if(i>=0) return mostraFoto(i); ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${f}" alt="">`; return; }
     const sv=ov.querySelector(".gal .main svg"); if(sv&&selCor){ sv.style.color=selCor.hex; sv.style.opacity="1"; sv.style.filter="drop-shadow(0 0 1px rgba(0,0,0,.35))"; } };
   tinge();
-  ov.querySelectorAll(".csel").forEach(b=>b.onclick=()=>{ selCor=ca[+b.dataset.i]; tinge(); ov.querySelectorAll(".csel").forEach(x=>x.classList.toggle("on",x===b)); $("#selCorTxt").textContent=selCor.nome; atualizaWa(); });
+  ov.querySelectorAll(".csel").forEach(b=>b.onclick=e=>{ e.preventDefault(); e.stopPropagation(); marcaCor(ca[+b.dataset.i]); tinge(); atualizaWa(); });
   ov.querySelectorAll(".capsel").forEach(b=>b.onclick=()=>{ selCap=aa[+b.dataset.i]; ov.querySelectorAll(".capsel").forEach(x=>x.classList.toggle("on",x===b));
     const pr=precoAtual(), o=p.precoAntigo>pr&&pr?Math.round((1-pr/p.precoAntigo)*100):0;
     $("#mprice").innerHTML = pr?`<b>${brl(pr)}</b>${o?`<s>${brl(p.precoAntigo)}</s> <span class="tag off" style="position:static">-${o}%</span>`:""}`:"<b>Sob consulta</b>"; atualizaWa(); });
@@ -780,12 +798,14 @@ function admProdutos(){
 function confirmar(msg){ return window.confirm(msg); }
 function formProduto(orig,ehCopia){
   const p = orig ? JSON.parse(JSON.stringify(orig)) : {nome:"",categoria:"",preco:0,precoAntigo:0,condicao:"",specs:"",descricao:"",fotos:[],destaque:false,ativo:true,esgotado:false,personalizavel:false};
-  p.cores=p.cores||[]; p.armaz=p.armaz||[]; if(ehCopia) orig=null;
+  p.cores=p.cores||[]; p.armaz=p.armaz||[]; p.fotos=p.fotos||[]; if(ehCopia) orig=null;
+  p.fotosCor=(p.fotosCor||[]).slice(0,p.fotos.length); while(p.fotosCor.length<p.fotos.length) p.fotosCor.push("");
+  p.cores.forEach(c=>{ if(c.foto){ p.fotos.push(c.foto); p.fotosCor.push(c.nome); delete c.foto; } });
   const ov=document.createElement("div"); ov.className="ov";
   ov.innerHTML=`<div class="md" style="width:min(760px,100%)"><div class="mbar"><button class="voltar" type="button">‹ Voltar</button><button class="x" type="button" aria-label="Fechar">×</button></div>
   <form class="panel" id="pf" style="border:0;background:none">
     <h3 style="font-size:22px">${orig?"Editar produto":"Novo produto"}</h3>
-    <div class="fsec"><div class="fsec-h"><b>📷 Fotos do produto</b><span>Até 6 fotos. A primeira é a capa (toque na ★ para trocar a capa).</span></div><div class="fotos" id="fotos"></div></div>
+    <div class="fsec"><div class="fsec-h"><b>📷 Fotos do produto</b><span>Até 12 fotos. A primeira é a capa (★ troca a capa). Embaixo de cada foto escolha a <b>cor</b> dela — no site, ao tocar na cor, a foto muda.</span></div><div class="fotos" id="fotos"></div></div>
     <div class="fld"><label>Nome do produto *</label><input class="inp" id="f_nome" required value="${esc(p.nome)}" placeholder="Ex.: iPhone 14 128GB ou Copo térmico 500ml"></div>
     <div class="row">
       <div class="fld"><label>Categoria</label><input class="inp" id="f_cat" list="catlist" value="${esc(p.categoria)}" placeholder="Escolha ou digite"><datalist id="catlist">${cats().map(c=>`<option value="${esc(c)}">`).join("")}</datalist></div>
@@ -817,30 +837,31 @@ function formProduto(orig,ehCopia){
   document.body.appendChild(ov); document.body.style.overflow="hidden";
   const fechar=()=>{ ov.remove(); document.body.style.overflow=""; };
   ov.querySelector(".x").onclick=fechar; ov.querySelector(".voltar").onclick=fechar; $("#cancel").onclick=fechar;
+  const MAXF=12;
   const drawFotos=()=>{
-    $("#fotos").innerHTML = p.fotos.map((f,i)=>`<div class="foto"><img src="${f}" alt="">${i===0?'<span class="capa">CAPA</span>':""}<div class="fx"><button type="button" data-m="${i}" title="Tornar capa">★</button><button type="button" data-r="${i}" title="Remover">✕</button></div></div>`).join("")
-      + (p.fotos.length<6?`<label class="up"><span style="font-size:26px;line-height:1">📷</span><b>Adicionar fotos</b><input type="file" accept="image/*" multiple class="fi" id="fin"></label>`:"");
-    $("#fotos").querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{p.fotos.splice(+b.dataset.r,1); drawFotos();});
-    $("#fotos").querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{const [f]=p.fotos.splice(+b.dataset.m,1); p.fotos.unshift(f); drawFotos();});
+    const nomes=p.cores.map(c=>c.nome); p.fotosCor=p.fotosCor.map(n=>nomes.includes(n)?n:"");
+    $("#fotos").innerHTML = p.fotos.map((f,i)=>{ const cn=p.fotosCor[i], c=p.cores.find(x=>x.nome===cn);
+      return `<div class="fwrap"><div class="foto"><img src="${f}" alt="">${i===0?'<span class="capa">CAPA</span>':""}<div class="fx"><button type="button" data-m="${i}" title="Tornar capa">★</button><button type="button" data-r="${i}" title="Remover">✕</button></div></div>
+        ${p.cores.length?`<label class="fcor">${c?swatch(c,12):'<i class="sw" style="--c:transparent;width:12px;height:12px;border:1px dashed var(--mut)"></i>'}<select data-fc="${i}"><option value="">Todas as cores</option>${p.cores.map(x=>`<option value="${esc(x.nome)}" ${cn===x.nome?"selected":""}>${esc(x.nome)}</option>`).join("")}</select></label>`:""}</div>`; }).join("")
+      + (p.fotos.length<MAXF?`<label class="up"><span style="font-size:26px;line-height:1">📷</span><b>Adicionar fotos</b><input type="file" accept="image/*" multiple class="fi" id="fin"></label>`:"");
+    $("#fotos").querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.r; p.fotos.splice(i,1); p.fotosCor.splice(i,1); drawFotos(); drawCores(); });
+    $("#fotos").querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.m; const [f]=p.fotos.splice(i,1); const [n]=p.fotosCor.splice(i,1); p.fotos.unshift(f); p.fotosCor.unshift(n); drawFotos(); });
+    $("#fotos").querySelectorAll("[data-fc]").forEach(x=>x.onchange=()=>{ const v=x.value; p.fotosCor[+x.dataset.fc]=v; if(v){ const c=p.cores.find(y=>y.nome===v); if(c&&!c.ativo){ c.ativo=true; autoMostrar(); } } drawCores(); drawFotos(); });
     $("#fin")?.addEventListener("change",async e=>{
-      const files=[...e.target.files].slice(0,6-p.fotos.length);
-      for(const f of files){ try{ p.fotos.push(await compress(f,1000,"image/jpeg",.78,Math.max(90,200-p.fotos.length*25))); }catch{ toast("Não consegui ler uma das imagens"); } }
+      const files=[...e.target.files].slice(0,MAXF-p.fotos.length);
+      for(const f of files){ try{ p.fotos.push(await compress(f,1000,"image/jpeg",.78,Math.max(55,150-p.fotos.length*10))); p.fotosCor.push(""); }catch{ toast("Não consegui ler uma das imagens"); } }
       drawFotos();
+      if(p.cores.length && files.length) toast("Agora escolha a cor de cada foto embaixo dela");
     });
   };
   drawFotos();
   const autoMostrar=()=>{ if(!$("#f_ativo").checked){ $("#f_ativo").checked=true; const c=$("#chkAtivo"); c.classList.add("flash"); setTimeout(()=>c.classList.remove("flash"),1200); } };
   const drawCores=()=>{
     $("#coresAdm").innerHTML = p.cores.length ? `<div class="cores-tools"><button type="button" class="lnk" data-all="1">Marcar todas</button><button type="button" class="lnk" data-all="0">Desmarcar todas</button></div>`+
-      p.cores.map((c,i)=>`<label class="cchip ${c.ativo?"on":""}"><input type="checkbox" data-ci="${i}" ${c.ativo?"checked":""}>${c.foto?`<img class="cfoto" src="${c.foto}" alt="">`:swatch(c,22)}<span>${esc(c.nome)}</span><button type="button" class="cam ${c.foto?"tem":""}" data-cf="${i}" title="${c.foto?"Trocar/remover foto desta cor":"Adicionar foto desta cor"}">📷</button><button type="button" class="rm" data-cr="${i}" title="Remover cor">×</button></label>`).join("")+`<input type="file" accept="image/*" class="fi" id="corFotoIn">`
+      p.cores.map((c,i)=>`<label class="cchip ${c.ativo?"on":""}"><input type="checkbox" data-ci="${i}" ${c.ativo?"checked":""}>${fotoDaCor(p,c.nome)?`<img class="cfoto" src="${fotoDaCor(p,c.nome)}" alt="">`:swatch(c,22)}<span>${esc(c.nome)}</span><button type="button" class="rm" data-cr="${i}" title="Remover cor">×</button></label>`).join("")
       : '<p class="hint">Nenhuma cor cadastrada. Adicione abaixo (opcional).</p>';
     $("#coresAdm").querySelectorAll("[data-ci]").forEach(x=>x.onchange=()=>{ p.cores[+x.dataset.ci].ativo=x.checked; if(x.checked) autoMostrar(); drawCores(); });
-    $("#coresAdm").querySelectorAll("[data-cr]").forEach(x=>x.onclick=e=>{ e.preventDefault(); p.cores.splice(+x.dataset.cr,1); drawCores(); });
-    const cin=$("#corFotoIn");
-    $("#coresAdm").querySelectorAll("[data-cf]").forEach(x=>x.onclick=e=>{ e.preventDefault(); e.stopPropagation(); const i=+x.dataset.cf, c=p.cores[i];
-      if(c.foto && confirmar(`Remover a foto da cor ${c.nome}?\n(Cancelar = escolher outra foto)`)){ delete c.foto; drawCores(); return; }
-      if(cin){ cin.dataset.i=i; cin.value=""; cin.click(); } });
-    if(cin) cin.onchange=async()=>{ const f=cin.files[0]; if(!f) return; const c=p.cores[+cin.dataset.i]; try{ c.foto=await compress(f,800,"image/jpeg",.75,110); c.ativo=true; autoMostrar(); }catch{ toast("Não consegui ler a imagem"); } drawCores(); };
+    $("#coresAdm").querySelectorAll("[data-cr]").forEach(x=>x.onclick=e=>{ e.preventDefault(); p.cores.splice(+x.dataset.cr,1); drawCores(); drawFotos(); });
     $("#coresAdm").querySelectorAll("[data-all]").forEach(x=>x.onclick=()=>{ p.cores.forEach(c=>c.ativo=x.dataset.all==="1"); if(x.dataset.all==="1") autoMostrar(); drawCores(); });
   };
   const lerPrecosCaps=()=>{ $("#capsAdm").querySelectorAll("[data-pi]").forEach(x=>{ p.armaz[+x.dataset.pi].preco=parseNum(x.value); }); };
@@ -853,7 +874,7 @@ function formProduto(orig,ehCopia){
     $("#lblPreco").textContent = p.armaz.length ? "Preço (R$) — usado só se não preencher por armazenamento" : "Preço (R$)";
   };
   drawCores(); drawCaps();
-  $("#addCor").onclick=()=>{ const n=$("#novaCorNome").value.trim(); if(!n) return $("#novaCorNome").focus(); p.cores.push({nome:n,hex:$("#novaCorHex").value,ativo:true}); $("#novaCorNome").value=""; autoMostrar(); drawCores(); };
+  $("#addCor").onclick=()=>{ const n=$("#novaCorNome").value.trim(); if(!n) return $("#novaCorNome").focus(); p.cores.push({nome:n,hex:$("#novaCorHex").value,ativo:true}); $("#novaCorNome").value=""; autoMostrar(); drawCores(); drawFotos(); };
   $("#addCap").onclick=()=>{ const n=$("#novaCap").value.trim(); if(!n) return $("#novaCap").focus(); lerPrecosCaps(); p.armaz.push({cap:n,preco:0,ativo:true}); $("#novaCap").value=""; autoMostrar(); drawCaps(); };
   $("#pf").onsubmit=async e=>{
     e.preventDefault(); lerPrecosCaps();
