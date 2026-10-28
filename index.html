@@ -571,11 +571,12 @@ function renderSite(){
   $("#chips").addEventListener("click",e=>{const b=e.target.closest(".chip"); if(!b) return; setCat(b.dataset.c,false);});
   $("#catsel").addEventListener("change",e=>setCat(e.target.value,false));
   initCarrossel();
-  $("#app").addEventListener("click",e=>{
+  if(!window._appClickOk){ window._appClickOk=true; $("#app").addEventListener("click",e=>{
+    if(modoAtual!=="site") return;
     const t=e.target.closest(".cat-t"); if(t){ e.preventDefault(); setCat(t.dataset.c,true); try{ history.replaceState(null,"","#cat="+encodeURIComponent(t.dataset.c)); }catch{} return; }
     const sw=e.target.closest(".cardsw"); if(sw){ e.preventDefault(); e.stopPropagation(); trocaCorCard(sw); return; }
     const c=e.target.closest(".card"); if(c){ abrirProduto(c.dataset.id,true,c.dataset.cor||""); }
-  });
+  }); }
 }
 function heroTitle(t){ t=esc(t||""); const w=t.split(" "); if(w.length<3) return t; const k=Math.ceil(w.length/2); return w.slice(0,k).join(" ")+" <span>"+w.slice(k).join(" ")+"</span>"; }
 function setCat(c,rolar){
@@ -683,7 +684,7 @@ function abrirProduto(id,doClique,corIni){
   const fechar=()=>{ if(!ov.isConnected) return; ov.remove(); document.body.style.overflow="";
     sincronizaCard(p.id, selCor&&selCor.nome);
     if(location.hash.startsWith("#p=")){ window._voltandoModal=true; if(pushed){ try{ history.back(); }catch{} } else { try{ history.replaceState(null,"",location.pathname+location.search); }catch{} } }
-    window.scrollTo(0,scrollAntes); setTimeout(()=>{ window.scrollTo(0,scrollAntes); window._voltandoModal=false; },350); };
+    window.scrollTo(0,scrollAntes); setTimeout(()=>{ if(location.hash.startsWith("#p=")){ document.querySelectorAll(".ov").forEach(o=>o.remove()); document.body.style.overflow=""; try{ history.replaceState(null,"",location.pathname+location.search); }catch{} } window.scrollTo(0,scrollAntes); window._voltandoModal=false; },350); };
   ov._fechar=fechar;
   ov.addEventListener("click",e=>{ if(e.target===ov||e.target.closest(".x")||e.target.closest(".voltar")) fechar(); });
   const mostraFoto=i=>{ ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${fotos[i]}" alt="">`; ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.toggle("on",+x.dataset.i===i)); };
