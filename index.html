@@ -378,6 +378,8 @@ function catalogoIphones(){
     cores:CORES[ck].map(c=>({...c,ativo:false})), armaz:caps.split(",").map(c=>({cap:c,preco:0,ativo:false})), criadoEm:base+i*1000 }));
 }
 const fotoDaCor = (p,nome) => { if(!nome) return ""; const i=(p.fotosCor||[]).indexOf(nome); if(i>=0 && p.fotos&&p.fotos[i]) return p.fotos[i]; return ((p.cores||[]).find(c=>c.nome===nome)||{}).foto||""; };
+const fotoGeral = p => { const fc=p.fotosCor||[]; const i=(p.fotos||[]).findIndex((f,k)=>!fc[k]); return i>=0?p.fotos[i]:""; };
+const fotoParaCor = (p,nome) => fotoDaCor(p,nome) || fotoGeral(p);
 const capa = p => (p.fotos&&p.fotos[0]) || ((p.cores||[]).find(c=>c.ativo&&c.foto)||(p.cores||[]).find(c=>c.foto)||{}).foto || "";
 const coresAtivas = p => (p.cores||[]).filter(c=>c.ativo);
 const capsAtivas = p => (p.armaz||[]).filter(a=>a.ativo);
@@ -641,9 +643,9 @@ function trocaCorCard(sw){
   const card=sw.closest(".card"); const p=S.produtos.find(x=>x.id===card.dataset.id); if(!p) return;
   const nome=sw.dataset.cor, c=(p.cores||[]).find(x=>x.nome===nome); card.dataset.cor=nome;
   card.querySelectorAll(".cardsw").forEach(x=>x.classList.toggle("on",x===sw));
-  const ph=card.querySelector(".ph"), f=fotoDaCor(p,nome);
+  const ph=card.querySelector(".ph"), f=fotoParaCor(p,nome);
   if(f) ph.innerHTML=`<img src="${f}" alt="${esc(p.nome)} ${esc(nome)}">`;
-  else { if(!ph.querySelector("svg")) ph.innerHTML = capa(p)?`<img src="${capa(p)}" alt="">`:PH(p.categoria); const sv=ph.querySelector("svg"); if(sv&&c){ sv.style.color=c.hex; sv.style.opacity="1"; sv.style.filter="drop-shadow(0 0 1px rgba(0,0,0,.35))"; } }
+  else { ph.innerHTML=PH(p.categoria); const sv=ph.querySelector("svg"); if(sv&&c){ sv.style.color=c.hex; sv.style.opacity="1"; sv.style.filter="drop-shadow(0 0 1px rgba(0,0,0,.35))"; } }
 }
 function abrirProduto(id,doClique,corIni){
   const p=S.produtos.find(x=>x.id===id); if(!p) return;
@@ -683,7 +685,8 @@ function abrirProduto(id,doClique,corIni){
   ov.querySelectorAll(".thumbs button").forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; mostraFoto(i); const cn=(p.fotosCor||[])[i]; const c=cn&&ca.find(x=>x.nome===cn); if(c){ marcaCor(c); atualizaWa(); } });
   const atualizaWa=()=>{ const t=$("#persoTxt")?.value.trim(); const url=location.href.split("#")[0]+"#p="+p.id; const pr=precoAtual();
     $("#comprar").href=waLink(`Olá! Tenho interesse no produto:\n*${p.nome}*${selCap?` ${selCap.cap}`:""}${pr?` — ${brl(pr)}`:""}${selCor?`\nCor: ${selCor.nome}`:""}${p.condicao?`\nCondição: ${p.condicao}`:""}${t?`\nPersonalização: "${t}"`:""}\n${url}`); };
-  const tinge=()=>{ const f=selCor&&fotoDaCor(p,selCor.nome); if(f){ const i=fotos.indexOf(f); if(i>=0) return mostraFoto(i); ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${f}" alt="">`; return; }
+  const tinge=()=>{ if(!selCor) return; const f=fotoParaCor(p,selCor.nome); if(f){ const i=fotos.indexOf(f); if(i>=0) return mostraFoto(i); ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${f}" alt="">`; return; }
+    ov.querySelector(".gal .main").innerHTML=PH(p.categoria); ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.remove("on"));
     const sv=ov.querySelector(".gal .main svg"); if(sv&&selCor){ sv.style.color=selCor.hex; sv.style.opacity="1"; sv.style.filter="drop-shadow(0 0 1px rgba(0,0,0,.35))"; } };
   tinge();
   ov.querySelectorAll(".csel").forEach(b=>b.onclick=e=>{ e.preventDefault(); e.stopPropagation(); marcaCor(ca[+b.dataset.i]); tinge(); atualizaWa(); });
