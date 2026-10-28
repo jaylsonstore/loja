@@ -537,7 +537,6 @@ function renderSite(){
   </div></section>
   ${catsUsadas.length>1?`<section class="sec" id="categorias"><div class="wrap"><div class="sec-h"><h2>Compre por categoria</h2><p>Toque para ver os produtos</p></div>
     <div class="carr"><button class="carr-b prev" aria-label="Voltar">‹</button><div class="cats" id="cats"><div class="ctrack">${(()=>{ const set=catsUsadas.map(c=>{ const ps=vis.filter(p=>p.categoria===c); const f=ps.find(p=>p.fotos?.[0]); return `<a class="cat-t" data-c="${esc(c)}" href="#cat=${encodeURIComponent(c)}"><div class="ci">${f?`<img loading="lazy" src="${f.fotos[0]}" alt="">`:catIcon(c)}</div><b>${esc(c)}</b><small>${ps.length} ${ps.length===1?"produto":"produtos"}</small></a>`; }).join(""); const reps=catsUsadas.length<6?4:2; return `<div class="cset">${set}</div>`+Array.from({length:reps-1},()=>`<div class="cset" aria-hidden="true" inert>${set}</div>`).join(""); })()}</div></div><button class="carr-b next" aria-label="Avançar">›</button></div></div></div></section>`:""}
-  ${dest.length?`<section class="sec"><div class="wrap"><div class="sec-h"><h2>Destaques</h2><p>Selecionados para você</p></div><div class="rail">${dest.map(cardHTML).join("")}</div></div></section>`:""}
   <section class="sec" id="catalogo"><div class="wrap">
     <div class="sec-h"><h2 id="cattitle">Catálogo</h2><p id="count"></p></div>
     <div class="tools"><label class="search"><span>🔍</span><input id="q" placeholder="Buscar produto…" value="${esc(S.q)}"></label>
@@ -724,7 +723,7 @@ function admProdutos(){
     <div class="stats">
       <div class="stat"><small>Produtos</small><b>${ps.length}</b></div>
       <div class="stat"><small>Visíveis no site</small><b>${ps.filter(p=>p.ativo!==false).length}</b></div>
-      <div class="stat"><small>Em destaque</small><b>${ps.filter(p=>p.destaque).length}</b></div>
+      <div class="stat"><small>Mostrados primeiro</small><b>${ps.filter(p=>p.destaque).length}</b></div>
       <div class="stat"><small>Esgotados</small><b>${ps.filter(p=>p.esgotado).length}</b></div>
     </div>
     <div class="tools"><label class="search"><span>🔍</span><input id="aq" placeholder="Buscar no estoque…" value="${esc(admQ)}"></label>
@@ -736,7 +735,7 @@ function admProdutos(){
         <div class="th">${p.fotos?.[0]?`<img src="${p.fotos[0]}" alt="">`:`<div style="display:grid;place-items:center;height:100%">${PH(p.categoria)}</div>`}</div>
         <div><h4>${esc(p.nome)}</h4><div class="meta"><span>${esc(p.categoria||"Sem categoria")}</span>·<b style="color:var(--tx)">${precoBase(p)?brl(precoBase(p)):"Consulte"}</b>
           ${(p.cores||[]).length?`<span class="swrow" style="margin:0">${coresAtivas(p).map(c=>swatch(c,12)).join("")||'<span class="badge no">Nenhuma cor marcada</span>'}</span>`:""}${capsAtivas(p).length?`<span>${capsAtivas(p).map(a=>esc(a.cap)).join(" · ")}</span>`:""}
-          ${p.ativo===false?'<span class="badge">Oculto</span>':'<span class="badge ok">No site</span>'}${p.destaque?'<span class="badge st">Destaque</span>':""}${p.esgotado?'<span class="badge no">Esgotado</span>':""}${p.personalizavel?'<span class="badge">Personalizável</span>':""}</div></div>
+          ${p.ativo===false?'<span class="badge">Oculto</span>':'<span class="badge ok">No site</span>'}${p.destaque?'<span class="badge st">Primeiro</span>':""}${p.esgotado?'<span class="badge no">Esgotado</span>':""}${p.personalizavel?'<span class="badge">Personalizável</span>':""}</div></div>
         <div class="act">
           <button class="btn btn-g btn-sm" data-a="vis" data-id="${p.id}">${p.ativo===false?"Mostrar":"Ocultar"}</button>
           <button class="btn btn-g btn-sm" data-a="esg" data-id="${p.id}">${p.esgotado?"Tem estoque":"Esgotou"}</button>
@@ -788,7 +787,7 @@ function formProduto(orig,ehCopia){
     <div class="fld"><label>Descrição</label><textarea class="inp" id="f_desc" placeholder="Detalhes, o que acompanha, garantia…">${esc(p.descricao)}</textarea></div>
     <div class="row">
       <label class="chk" id="chkAtivo"><input type="checkbox" id="f_ativo" ${p.ativo!==false?"checked":""}> Mostrar no site</label>
-      <label class="chk"><input type="checkbox" id="f_dest" ${p.destaque?"checked":""}> Em destaque</label>
+      <label class="chk"><input type="checkbox" id="f_dest" ${p.destaque?"checked":""}> Mostrar primeiro no catálogo</label>
       <label class="chk"><input type="checkbox" id="f_pers" ${p.personalizavel?"checked":""}> Aceita personalização (laser)</label>
       <label class="chk"><input type="checkbox" id="f_esg" ${p.esgotado?"checked":""}> Esgotado</label>
     </div>
