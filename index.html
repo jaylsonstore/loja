@@ -289,7 +289,11 @@ textarea.inp{min-height:96px;resize:vertical}
 .foto .fx{position:absolute;inset:auto 4px 4px 4px;display:flex;justify-content:space-between}
 .foto .fx button{width:26px;height:26px;border-radius:8px;background:rgba(0,0,0,.65);color:#fff;font-size:13px}
 .foto .capa{position:absolute;top:4px;left:4px;font-size:10px;background:var(--p);color:var(--p-ink);padding:2px 6px;border-radius:6px;font-weight:700}
-.up{width:96px;height:96px;border-radius:14px;border:2px dashed var(--line);display:grid;place-items:center;color:var(--mut);font-size:12px;text-align:center;cursor:pointer;padding:6px}
+.up{width:110px;height:110px;border-radius:16px;border:2px dashed var(--a);background:color-mix(in srgb,var(--a) 10%,var(--card));display:grid;place-content:center;justify-items:center;gap:4px;color:var(--tx);font-size:13px;text-align:center;cursor:pointer;padding:6px;position:relative}
+.fi{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.cfoto{width:22px;height:22px;border-radius:50%;object-fit:cover;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.cam{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:14px;background:color-mix(in srgb,var(--tx) 7%,transparent)}
+.cam.tem{background:var(--a);}
 .up:hover{border-color:var(--p);color:var(--p)}
 .logo-prev{height:72px;min-width:72px;border-radius:14px;border:1px solid var(--line);background:var(--card);display:grid;place-items:center;padding:8px}
 .logo-prev img{max-height:56px;max-width:220px;object-fit:contain}
@@ -367,6 +371,7 @@ function catalogoIphones(){
     destaque:false, ativo:false, esgotado:false, personalizavel:false, modelo:true,
     cores:CORES[ck].map(c=>({...c,ativo:false})), armaz:caps.split(",").map(c=>({cap:c,preco:0,ativo:false})), criadoEm:base+i*1000 }));
 }
+const capa = p => (p.fotos&&p.fotos[0]) || ((p.cores||[]).find(c=>c.ativo&&c.foto)||(p.cores||[]).find(c=>c.foto)||{}).foto || "";
 const coresAtivas = p => (p.cores||[]).filter(c=>c.ativo);
 const capsAtivas = p => (p.armaz||[]).filter(a=>a.ativo);
 function precoBase(p){ const ps=capsAtivas(p).map(a=>a.preco).filter(v=>v>0); return ps.length?Math.min(...ps):(p.preco||0); }
@@ -513,7 +518,7 @@ function cardHTML(p){
   const tags=[ p.esgotado?'<span class="tag no">Esgotado</span>':"", off?`<span class="tag off">-${off}%</span>`:"", p.condicao?`<span class="tag">${esc(p.condicao)}</span>`:"", p.personalizavel?'<span class="tag laser">Personalizável</span>':"" ].join("");
   return `<article class="card ${p.esgotado?"sold":""}" data-id="${p.id}">
     <div class="tags">${tags}</div>
-    <div class="ph">${p.fotos?.[0]?`<img loading="lazy" src="${p.fotos[0]}" alt="${esc(p.nome)}">`:PH(p.categoria)}</div>
+    <div class="ph">${capa(p)?`<img loading="lazy" src="${capa(p)}" alt="${esc(p.nome)}">`:PH(p.categoria)}</div>
     <div class="bd"><div class="cat">${esc(p.categoria||"")}</div><h3>${esc(p.nome)}</h3>
       ${ca.length?`<div class="swrow">${ca.slice(0,7).map(c=>swatch(c)).join("")}${ca.length>7?`<small>+${ca.length-7}</small>`:""}</div>`:""}
       <div class="price">${pb?`${variosPrecos(p)?'<small class="apartir">a partir de</small>':""}<b>${brl(pb)}</b>`:"<b>Consulte</b>"}${off?`<s>${brl(p.precoAntigo)}</s>`:""}</div>
@@ -536,7 +541,7 @@ function renderSite(){
     <p>${esc(l.heroTexto)}</p>
   </div></section>
   ${catsUsadas.length>1?`<section class="sec" id="categorias"><div class="wrap"><div class="sec-h"><h2>Compre por categoria</h2><p>Toque para ver os produtos</p></div>
-    <div class="carr"><button class="carr-b prev" aria-label="Voltar">‹</button><div class="cats" id="cats"><div class="ctrack">${(()=>{ const set=catsUsadas.map(c=>{ const ps=vis.filter(p=>p.categoria===c); const f=ps.find(p=>p.fotos?.[0]); return `<a class="cat-t" data-c="${esc(c)}" href="#cat=${encodeURIComponent(c)}"><div class="ci">${f?`<img loading="lazy" src="${f.fotos[0]}" alt="">`:catIcon(c)}</div><b>${esc(c)}</b><small>${ps.length} ${ps.length===1?"produto":"produtos"}</small></a>`; }).join(""); const reps=catsUsadas.length<6?4:2; return `<div class="cset">${set}</div>`+Array.from({length:reps-1},()=>`<div class="cset" aria-hidden="true" inert>${set}</div>`).join(""); })()}</div></div><button class="carr-b next" aria-label="Avançar">›</button></div></div></div></section>`:""}
+    <div class="carr"><button class="carr-b prev" aria-label="Voltar">‹</button><div class="cats" id="cats"><div class="ctrack">${(()=>{ const set=catsUsadas.map(c=>{ const ps=vis.filter(p=>p.categoria===c); const f=ps.find(p=>capa(p)); return `<a class="cat-t" data-c="${esc(c)}" href="#cat=${encodeURIComponent(c)}"><div class="ci">${f?`<img loading="lazy" src="${capa(f)}" alt="">`:catIcon(c)}</div><b>${esc(c)}</b><small>${ps.length} ${ps.length===1?"produto":"produtos"}</small></a>`; }).join(""); const reps=catsUsadas.length<6?4:2; return `<div class="cset">${set}</div>`+Array.from({length:reps-1},()=>`<div class="cset" aria-hidden="true" inert>${set}</div>`).join(""); })()}</div></div><button class="carr-b next" aria-label="Avançar">›</button></div></div></div></section>`:""}
   <section class="sec" id="catalogo"><div class="wrap">
     <div class="sec-h"><h2 id="cattitle">Catálogo</h2><p id="count"></p></div>
     <div class="tools"><label class="search"><span>🔍</span><input id="q" placeholder="Buscar produto…" value="${esc(S.q)}"></label>
@@ -636,7 +641,7 @@ function abrirProduto(id,doClique){
   if(p.condicao) specs.unshift(["Condição",p.condicao]);
   const ov=document.createElement("div"); ov.className="ov";
   ov.innerHTML=`<div class="md" role="dialog" aria-label="${esc(p.nome)}"><div class="mbar"><button class="voltar" type="button">‹ Voltar</button><button class="x" type="button" aria-label="Fechar">×</button></div><div class="pd">
-    <div class="gal"><div class="main">${fotos[0]?`<img id="mainimg" src="${fotos[0]}" alt="${esc(p.nome)}">`:PH(p.categoria)}</div>
+    <div class="gal"><div class="main">${(selCor&&selCor.foto)||capa(p)?`<img id="mainimg" src="${(selCor&&selCor.foto)||capa(p)}" alt="${esc(p.nome)}">`:PH(p.categoria)}</div>
       ${fotos.length>1?`<div class="thumbs">${fotos.map((f,i)=>`<button class="${i?"":"on"}" data-i="${i}"><img src="${f}" alt=""></button>`).join("")}</div>`:""}</div>
     <div class="info">
       <div class="cat" style="color:var(--mut);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em">${esc(p.categoria||"")}</div>
@@ -657,10 +662,11 @@ function abrirProduto(id,doClique){
     if(location.hash.startsWith("#p=")){ if(pushed){ try{ history.back(); }catch{} } else { try{ history.replaceState(null,"",location.pathname+location.search); }catch{} } } };
   ov._fechar=fechar;
   ov.addEventListener("click",e=>{ if(e.target===ov||e.target.closest(".x")||e.target.closest(".voltar")) fechar(); });
-  ov.querySelectorAll(".thumbs button").forEach(b=>b.onclick=()=>{ $("#mainimg").src=fotos[b.dataset.i]; ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.toggle("on",x===b)); });
+  ov.querySelectorAll(".thumbs button").forEach(b=>b.onclick=()=>{ ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${fotos[b.dataset.i]}" alt="">`; ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.toggle("on",x===b)); });
   const atualizaWa=()=>{ const t=$("#persoTxt")?.value.trim(); const url=location.href.split("#")[0]+"#p="+p.id; const pr=precoAtual();
     $("#comprar").href=waLink(`Olá! Tenho interesse no produto:\n*${p.nome}*${selCap?` ${selCap.cap}`:""}${pr?` — ${brl(pr)}`:""}${selCor?`\nCor: ${selCor.nome}`:""}${p.condicao?`\nCondição: ${p.condicao}`:""}${t?`\nPersonalização: "${t}"`:""}\n${url}`); };
-  const tinge=()=>{ const sv=ov.querySelector(".gal .main svg"); if(sv&&selCor){ sv.style.color=selCor.hex; sv.style.opacity="1"; sv.style.filter="drop-shadow(0 0 1px rgba(0,0,0,.35))"; } };
+  const tinge=()=>{ if(selCor&&selCor.foto){ const m=ov.querySelector(".gal .main"); m.innerHTML=`<img id="mainimg" src="${selCor.foto}" alt="">`; ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.remove("on")); return; }
+    const sv=ov.querySelector(".gal .main svg"); if(sv&&selCor){ sv.style.color=selCor.hex; sv.style.opacity="1"; sv.style.filter="drop-shadow(0 0 1px rgba(0,0,0,.35))"; } };
   tinge();
   ov.querySelectorAll(".csel").forEach(b=>b.onclick=()=>{ selCor=ca[+b.dataset.i]; tinge(); ov.querySelectorAll(".csel").forEach(x=>x.classList.toggle("on",x===b)); $("#selCorTxt").textContent=selCor.nome; atualizaWa(); });
   ov.querySelectorAll(".capsel").forEach(b=>b.onclick=()=>{ selCap=aa[+b.dataset.i]; ov.querySelectorAll(".capsel").forEach(x=>x.classList.toggle("on",x===b));
@@ -732,7 +738,7 @@ function admProdutos(){
       <button class="btn btn-g" id="impIph">📱 Importar iPhones</button><button class="btn btn-p" id="novo">+ Novo produto</button></div>
     <div class="plist">${list.length?list.map(p=>`
       <div class="prow ${p.ativo===false?"inativo":""}">
-        <div class="th">${p.fotos?.[0]?`<img src="${p.fotos[0]}" alt="">`:`<div style="display:grid;place-items:center;height:100%">${PH(p.categoria)}</div>`}</div>
+        <div class="th">${capa(p)?`<img src="${capa(p)}" alt="">`:`<div style="display:grid;place-items:center;height:100%">${PH(p.categoria)}</div>`}</div>
         <div><h4>${esc(p.nome)}</h4><div class="meta"><span>${esc(p.categoria||"Sem categoria")}</span>·<b style="color:var(--tx)">${precoBase(p)?brl(precoBase(p)):"Consulte"}</b>
           ${(p.cores||[]).length?`<span class="swrow" style="margin:0">${coresAtivas(p).map(c=>swatch(c,12)).join("")||'<span class="badge no">Nenhuma cor marcada</span>'}</span>`:""}${capsAtivas(p).length?`<span>${capsAtivas(p).map(a=>esc(a.cap)).join(" · ")}</span>`:""}
           ${p.ativo===false?'<span class="badge">Oculto</span>':'<span class="badge ok">No site</span>'}${p.destaque?'<span class="badge st">Primeiro</span>':""}${p.esgotado?'<span class="badge no">Esgotado</span>':""}${p.personalizavel?'<span class="badge">Personalizável</span>':""}</div></div>
@@ -765,7 +771,7 @@ function formProduto(orig,ehCopia){
   ov.innerHTML=`<div class="md" style="width:min(760px,100%)"><div class="mbar"><button class="voltar" type="button">‹ Voltar</button><button class="x" type="button" aria-label="Fechar">×</button></div>
   <form class="panel" id="pf" style="border:0;background:none">
     <h3 style="font-size:22px">${orig?"Editar produto":"Novo produto"}</h3>
-    <div class="fld"><label>Fotos (a primeira é a capa)</label><div class="fotos" id="fotos"></div></div>
+    <div class="fsec"><div class="fsec-h"><b>📷 Fotos do produto</b><span>Até 6 fotos. A primeira é a capa (toque na ★ para trocar a capa).</span></div><div class="fotos" id="fotos"></div></div>
     <div class="fld"><label>Nome do produto *</label><input class="inp" id="f_nome" required value="${esc(p.nome)}" placeholder="Ex.: iPhone 14 128GB ou Copo térmico 500ml"></div>
     <div class="row">
       <div class="fld"><label>Categoria</label><input class="inp" id="f_cat" list="catlist" value="${esc(p.categoria)}" placeholder="Escolha ou digite"><datalist id="catlist">${cats().map(c=>`<option value="${esc(c)}">`).join("")}</datalist></div>
@@ -799,7 +805,7 @@ function formProduto(orig,ehCopia){
   ov.querySelector(".x").onclick=fechar; ov.querySelector(".voltar").onclick=fechar; $("#cancel").onclick=fechar;
   const drawFotos=()=>{
     $("#fotos").innerHTML = p.fotos.map((f,i)=>`<div class="foto"><img src="${f}" alt="">${i===0?'<span class="capa">CAPA</span>':""}<div class="fx"><button type="button" data-m="${i}" title="Tornar capa">★</button><button type="button" data-r="${i}" title="Remover">✕</button></div></div>`).join("")
-      + (p.fotos.length<6?`<label class="up">＋ Adicionar fotos<input type="file" accept="image/*" multiple hidden id="fin"></label>`:"");
+      + (p.fotos.length<6?`<label class="up"><span style="font-size:26px;line-height:1">📷</span><b>Adicionar fotos</b><input type="file" accept="image/*" multiple class="fi" id="fin"></label>`:"");
     $("#fotos").querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{p.fotos.splice(+b.dataset.r,1); drawFotos();});
     $("#fotos").querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{const [f]=p.fotos.splice(+b.dataset.m,1); p.fotos.unshift(f); drawFotos();});
     $("#fin")?.addEventListener("change",async e=>{
@@ -812,10 +818,15 @@ function formProduto(orig,ehCopia){
   const autoMostrar=()=>{ if(!$("#f_ativo").checked){ $("#f_ativo").checked=true; const c=$("#chkAtivo"); c.classList.add("flash"); setTimeout(()=>c.classList.remove("flash"),1200); } };
   const drawCores=()=>{
     $("#coresAdm").innerHTML = p.cores.length ? `<div class="cores-tools"><button type="button" class="lnk" data-all="1">Marcar todas</button><button type="button" class="lnk" data-all="0">Desmarcar todas</button></div>`+
-      p.cores.map((c,i)=>`<label class="cchip ${c.ativo?"on":""}"><input type="checkbox" data-ci="${i}" ${c.ativo?"checked":""}>${swatch(c,22)}<span>${esc(c.nome)}</span><button type="button" class="rm" data-cr="${i}" title="Remover cor">×</button></label>`).join("")
+      p.cores.map((c,i)=>`<label class="cchip ${c.ativo?"on":""}"><input type="checkbox" data-ci="${i}" ${c.ativo?"checked":""}>${c.foto?`<img class="cfoto" src="${c.foto}" alt="">`:swatch(c,22)}<span>${esc(c.nome)}</span><button type="button" class="cam ${c.foto?"tem":""}" data-cf="${i}" title="${c.foto?"Trocar/remover foto desta cor":"Adicionar foto desta cor"}">📷</button><button type="button" class="rm" data-cr="${i}" title="Remover cor">×</button></label>`).join("")+`<input type="file" accept="image/*" class="fi" id="corFotoIn">`
       : '<p class="hint">Nenhuma cor cadastrada. Adicione abaixo (opcional).</p>';
     $("#coresAdm").querySelectorAll("[data-ci]").forEach(x=>x.onchange=()=>{ p.cores[+x.dataset.ci].ativo=x.checked; if(x.checked) autoMostrar(); drawCores(); });
     $("#coresAdm").querySelectorAll("[data-cr]").forEach(x=>x.onclick=e=>{ e.preventDefault(); p.cores.splice(+x.dataset.cr,1); drawCores(); });
+    const cin=$("#corFotoIn");
+    $("#coresAdm").querySelectorAll("[data-cf]").forEach(x=>x.onclick=e=>{ e.preventDefault(); e.stopPropagation(); const i=+x.dataset.cf, c=p.cores[i];
+      if(c.foto && confirmar(`Remover a foto da cor ${c.nome}?\n(Cancelar = escolher outra foto)`)){ delete c.foto; drawCores(); return; }
+      if(cin){ cin.dataset.i=i; cin.value=""; cin.click(); } });
+    if(cin) cin.onchange=async()=>{ const f=cin.files[0]; if(!f) return; const c=p.cores[+cin.dataset.i]; try{ c.foto=await compress(f,800,"image/jpeg",.75,110); c.ativo=true; autoMostrar(); }catch{ toast("Não consegui ler a imagem"); } drawCores(); };
     $("#coresAdm").querySelectorAll("[data-all]").forEach(x=>x.onclick=()=>{ p.cores.forEach(c=>c.ativo=x.dataset.all==="1"); if(x.dataset.all==="1") autoMostrar(); drawCores(); });
   };
   const lerPrecosCaps=()=>{ $("#capsAdm").querySelectorAll("[data-pi]").forEach(x=>{ p.armaz[+x.dataset.pi].preco=parseNum(x.value); }); };
