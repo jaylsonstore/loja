@@ -311,6 +311,15 @@ textarea.inp{min-height:96px;resize:vertical}
 .vprev>div:last-child{display:grid;gap:4px}
 .vprev small{color:var(--mut);font-size:12px}
 .vbox{width:72px;height:72px;border-radius:12px;background:#111;color:#fff;display:grid;place-items:center;font-size:24px}
+.subf{display:grid;gap:10px;margin-top:12px;padding:12px 14px;border:1px solid var(--line);border-radius:16px;background:color-mix(in srgb,var(--card) 70%,transparent)}
+.fgrp{display:flex;gap:10px;align-items:center;min-width:0}
+.flab{font-size:12px;font-weight:700;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;flex:0 0 112px}
+.fchips{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px}
+.fchips::-webkit-scrollbar{display:none}
+.fchip{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card);font-size:13px;font-weight:500}
+.fchip.on{background:var(--tx);color:var(--bg);border-color:var(--tx)}
+.flimpa{justify-self:start;font-size:13px;font-weight:600;color:var(--mut);text-decoration:underline}
+@media(max-width:560px){.fgrp{display:grid;gap:6px}.flab{flex:none}}
 .cardsw{padding:2px;border-radius:50%;border:1.5px solid transparent;line-height:0}
 .cardsw.on{border-color:var(--tx)}
 .cfoto{width:22px;height:22px;border-radius:50%;object-fit:cover;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
@@ -564,7 +573,7 @@ async function urlDoVideo(v){ if(_vcache[v.id]) return _vcache[v.id]; const part
 /* ============================================================
    ESTADO
    ============================================================ */
-const S = { loja:{...LOJA_PADRAO}, produtos:[], user:null, cat:"Todos", q:"", tab:"produtos", authReady:false };
+const S = { fc:{cond:"",cap:"",cor:""}, loja:{...LOJA_PADRAO}, produtos:[], user:null, cat:"Todos", q:"", tab:"produtos", authReady:false };
 const cats = () => { const base=(S.loja.categorias||"").split("\n").map(s=>s.trim()).filter(Boolean); const extra=S.produtos.map(p=>p.categoria).filter(Boolean); return [...new Set([...base,...extra])]; };
 const visiveis = () => S.produtos.filter(p=>p.ativo!==false);
 const ordenar = arr => arr.sort((a,b)=>(!!a.esgotado-!!b.esgotado)||(!!b.destaque-!!a.destaque)||((b.criadoEm||0)-(a.criadoEm||0)));
@@ -589,7 +598,8 @@ function waLink(msg){ const n=onlyDigits(S.loja.whatsapp); const num = n ? (n.le
    SITE PÚBLICO
    ============================================================ */
 function cardHTML(p){
-  const pb=precoBase(p), ca=coresAtivas(p);
+  const capF=S.fc&&S.fc.cap?capsAtivas(p).find(x=>x.cap===S.fc.cap&&x.preco>0):null;
+  const pb=capF?capF.preco:precoBase(p), ca=coresAtivas(p);
   const off = p.precoAntigo>pb && pb ? Math.round((1-pb/p.precoAntigo)*100) : 0;
   const tags=[ p.esgotado?'<span class="tag no">Esgotado</span>':"", off?`<span class="tag off">-${off}%</span>`:"", p.condicao?`<span class="tag">${esc(p.condicao)}</span>`:"", p.personalizavel?'<span class="tag laser">Personalizável</span>':"", p.video?'<span class="tag vid">▶ Vídeo</span>':"" ].join("");
   return `<article class="card ${p.esgotado?"sold":""}" data-id="${p.id}">
@@ -597,7 +607,7 @@ function cardHTML(p){
     <div class="ph">${capa(p)?`<img loading="lazy" src="${capa(p)}" alt="${esc(p.nome)}">`:PH(p.categoria)}</div>
     <div class="bd"><div class="cat">${esc(p.categoria||"")}</div><h3>${esc(p.nome)}</h3>
       ${ca.length?`<div class="swrow">${ca.slice(0,7).map(c=>`<button type="button" class="cardsw" data-cor="${esc(c.nome)}" aria-label="${esc(c.nome)}" title="${esc(c.nome)}">${swatch(c,16)}</button>`).join("")}${ca.length>7?`<small>+${ca.length-7}</small>`:""}</div>`:""}
-      <div class="price">${pb?`${variosPrecos(p)?'<small class="apartir">a partir de</small>':""}<b>${brl(pb)}</b>`:"<b>Consulte</b>"}${off?`<s>${brl(p.precoAntigo)}</s>`:""}</div>
+      <div class="price">${pb?`${variosPrecos(p)&&!capF?'<small class="apartir">a partir de</small>':capF?`<small class="apartir">${esc(capF.cap)}</small>`:""}<b>${brl(pb)}</b>`:"<b>Consulte</b>"}${off?`<s>${brl(p.precoAntigo)}</s>`:""}</div>
       ${pb&&S.loja.parcelas?`<div class="inst">${esc(S.loja.parcelas)}</div>`:""}
     </div></article>`;
 }
@@ -623,7 +633,7 @@ function renderSite(){
     <div class="tools"><label class="search"><span>🔍</span><input id="q" placeholder="Buscar produto…" value="${esc(S.q)}"></label>
       <select class="inp catsel" id="catsel" aria-label="Categoria">${["Todos",...catsUsadas].map(c=>`<option value="${esc(c)}" ${S.cat===c?"selected":""}>${c==="Todos"?"Todas as categorias":esc(c)}</option>`).join("")}</select></div>
     <div class="chips sticky-chips" id="chips">${["Todos",...catsUsadas].map(c=>`<button class="chip ${S.cat===c?"on":""}" data-c="${esc(c)}">${esc(c)}</button>`).join("")}</div>
-    <div style="height:16px"></div><div id="grid"></div>
+    <div id="subf"></div><div style="height:16px"></div><div id="grid"></div>
   </div></section>
   ${difs.length?`<section class="sec" id="sobre"><div class="wrap"><div class="sec-h"><h2>Por que comprar com a gente</h2></div><div class="feats">${difs.map((d,i)=>`<div class="feat"><div class="ic">${ICONS[i%ICONS.length]}</div><h4>${esc(d[0])}</h4><p>${esc(d[1]||"")}</p></div>`).join("")}</div></div></section>`:""}
   <footer id="contato"><div class="wrap">
@@ -647,6 +657,7 @@ function renderSite(){
 }
 function heroTitle(t){ t=esc(t||""); const w=t.split(" "); if(w.length<3) return t; const k=Math.ceil(w.length/2); return w.slice(0,k).join(" ")+" <span>"+w.slice(k).join(" ")+"</span>"; }
 function setCat(c,rolar){
+  if((c||"Todos")!==S.cat) S.fc={cond:"",cap:"",cor:""};
   S.cat=c||"Todos";
   document.querySelectorAll(".chip").forEach(x=>{ x.classList.toggle("on",x.dataset.c===S.cat); if(x.dataset.c===S.cat) x.scrollIntoView({block:"nearest",inline:"center"}); });
   const sel=$("#catsel"); if(sel) sel.value=S.cat;
@@ -701,10 +712,32 @@ function catIcon(c){
   else d='<rect x="28" y="38" width="64" height="54" rx="6"/><path d="M28 54h64M60 38v54M48 38c-10-14 12-20 12 0 0-20 22-14 12 0"/>';
   return `<svg viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
 }
+const ORD_CAP=c=>{ const m=String(c).match(/([\d.,]+)\s*(TB|GB|MB)?/i); if(!m) return 1e9; const n=parseFloat(m[1].replace(",",".")); const u=(m[2]||"GB").toUpperCase(); return n*(u==="TB"?1024:u==="MB"?1/1024:1); };
+function passaFiltro(p){ const f=S.fc||{};
+  if(f.cond && p.condicao!==f.cond) return false;
+  if(f.cap && !capsAtivas(p).some(a=>a.cap===f.cap)) return false;
+  if(f.cor && !coresAtivas(p).some(c=>c.nome===f.cor)) return false;
+  return true; }
+function renderSubfiltros(){
+  const box=$("#subf"); if(!box) return; S.fc=S.fc||{cond:"",cap:"",cor:""};
+  if(S.cat==="Todos"){ box.innerHTML=""; return; }
+  const ps=visiveis().filter(p=>p.categoria===S.cat);
+  const conds=[...new Set(ps.map(p=>p.condicao).filter(Boolean))];
+  const caps=[...new Set(ps.flatMap(p=>capsAtivas(p).map(a=>a.cap)))].sort((a,b)=>ORD_CAP(a)-ORD_CAP(b));
+  const coresM=new Map(); ps.forEach(p=>coresAtivas(p).forEach(c=>{ if(!coresM.has(c.nome)) coresM.set(c.nome,c); }));
+  const grupo=(rot,chave,vals,fmt)=> vals.length? `<div class="fgrp"><span class="flab">${rot}</span><div class="fchips">${vals.map(v=>`<button type="button" class="fchip ${S.fc[chave]===v?"on":""}" data-k="${chave}" data-v="${esc(v)}">${fmt?fmt(v):esc(v)}</button>`).join("")}</div></div>`:"";
+  const ativos=S.fc.cond||S.fc.cap||S.fc.cor;
+  const html = grupo("Condição","cond",conds) + grupo("Armazenamento","cap",caps) + grupo("Cor","cor",[...coresM.keys()],v=>`${swatch(coresM.get(v),14)} ${esc(v)}`);
+  box.innerHTML = html ? `<div class="subf">${html}${ativos?`<button type="button" class="flimpa">Limpar filtros ✕</button>`:""}</div>` : "";
+  box.querySelectorAll(".fchip").forEach(b=>b.onclick=()=>{ const k=b.dataset.k, v=b.dataset.v; S.fc[k]=S.fc[k]===v?"":v; renderGrid(); });
+  box.querySelector(".flimpa")?.addEventListener("click",()=>{ S.fc={cond:"",cap:"",cor:""}; renderGrid(); });
+}
 function renderGrid(){
+  renderSubfiltros();
   const q=S.q.trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
-  const list=ordenar(visiveis().filter(p=>(S.cat==="Todos"||p.categoria===S.cat)&&(!q||(p.nome+" "+p.categoria+" "+(p.specs||"")+" "+(p.descricao||"")).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").includes(q))));
-  $("#grid").innerHTML = list.length?`<div class="grid">${list.map(cardHTML).join("")}</div>`:`<div class="empty">Nenhum produto encontrado${S.q?` para “${esc(S.q)}”`:""}.</div>`;
+  const list=ordenar(visiveis().filter(p=>(S.cat==="Todos"||p.categoria===S.cat)&&passaFiltro(p)&&(!q||(p.nome+" "+p.categoria+" "+(p.specs||"")+" "+(p.descricao||"")).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").includes(q))));
+  $("#grid").innerHTML = list.length?`<div class="grid">${list.map(cardHTML).join("")}</div>`:`<div class="empty">Nenhum produto encontrado${S.q?` para “${esc(S.q)}”`:""}${(S.fc&&(S.fc.cond||S.fc.cap||S.fc.cor))?" com esses filtros":""}.</div>`;
+  if(S.fc&&S.fc.cor) document.querySelectorAll("#grid .card").forEach(card=>{ const sw=[...card.querySelectorAll(".cardsw")].find(x=>x.dataset.cor===S.fc.cor); if(sw) trocaCorCard(sw); });
   $("#count").textContent = list.length+(list.length===1?" produto":" produtos");
 }
 function sincronizaCard(id,nome){
@@ -724,7 +757,7 @@ function abrirProduto(id,doClique,corIni){
   const scrollAntes=window.scrollY;
   let pushed=false; if(doClique){ try{ history.pushState(null,"","#p="+id); pushed=true; }catch{} }
   const fotos=p.fotos||[]; const ca=coresAtivas(p), aa=capsAtivas(p);
-  let selCor=ca.find(c=>c.nome===corIni)||(ca.length===1?ca[0]:null), selCap=aa.length?(aa.filter(a=>a.preco>0).sort((x,y)=>x.preco-y.preco)[0]||aa[0]):null;
+  let selCor=ca.find(c=>c.nome===corIni)||ca.find(c=>S.fc&&c.nome===S.fc.cor)||(ca.length===1?ca[0]:null), selCap=aa.find(a=>S.fc&&a.cap===S.fc.cap)||(aa.length?(aa.filter(a=>a.preco>0).sort((x,y)=>x.preco-y.preco)[0]||aa[0]):null);
   const precoAtual=()=> selCap&&selCap.preco>0 ? selCap.preco : precoBase(p);
   const off=p.precoAntigo>precoAtual()&&precoAtual()?Math.round((1-precoAtual()/p.precoAntigo)*100):0;
   const specs=(p.specs||"").split("\n").map(s=>{const i=s.indexOf(":"); return i>0?[s.slice(0,i).trim(),s.slice(i+1).trim()]:[s.trim(),""];}).filter(x=>x[0]);
