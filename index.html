@@ -299,7 +299,9 @@ textarea.inp{min-height:96px;resize:vertical}
 .vthumb{width:64px;height:64px;flex:0 0 auto;border-radius:12px;border:2px solid transparent;background:#111;color:#fff;font-size:20px;display:grid;place-content:center;line-height:1.1;opacity:.75}
 .vthumb small{font-size:10px}
 .vthumb.on{border-color:var(--p);opacity:1}
-.gal .main video{width:100%;height:100%;object-fit:contain;background:#000}
+.gal .main video{width:100%;height:100%;object-fit:contain;background:#000;cursor:pointer}
+.gal .main{position:relative}
+.vtip{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:11px;color:#fff;background:rgba(0,0,0,.45);padding:3px 9px;border-radius:999px;pointer-events:none}
 .vload{display:grid;gap:8px;justify-items:center;color:var(--mut);font-size:14px;text-align:center}
 .vprog{display:grid;gap:6px;justify-items:start;font-size:14px}
 .vprog small{color:var(--mut)}
@@ -528,11 +530,11 @@ async function comprimirVideo(file,onProg){
     const k=Math.min(1,640/Math.max(v.videoWidth,v.videoHeight)); const W=Math.max(2,Math.round(v.videoWidth*k/2)*2), H=Math.max(2,Math.round(v.videoHeight*k/2)*2);
     const cv=document.createElement("canvas"); cv.width=W; cv.height=H; const ctx=cv.getContext("2d");
     const stream=cv.captureStream(30); let actx=null;
-    try{ actx=new (window.AudioContext||window.webkitAudioContext)(); const src=actx.createMediaElementSource(v); const dest=actx.createMediaStreamDestination(); src.connect(dest); dest.stream.getAudioTracks().forEach(t=>stream.addTrack(t)); }catch{}
-    const tipos=["video/mp4;codecs=avc1.42E01E,mp4a.40.2","video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9,opus","video/webm;codecs=vp8,opus","video/webm"];
+    v.muted=true;
+    const tipos=["video/mp4;codecs=avc1.42E01E","video/mp4;codecs=avc1","video/mp4","video/webm;codecs=vp9","video/webm;codecs=vp8","video/webm"];
     const mime=window.MediaRecorder && tipos.find(t=>MediaRecorder.isTypeSupported(t));
     if(!mime) throw new Error("Este navegador não consegue compactar vídeo. Tente pelo Chrome ou Safari atualizado.");
-    const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:Math.max(250000,Math.min(600000,Math.floor(2.7*1024*1024*8/dur)-64000)),audioBitsPerSecond:64000});
+    const rec=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:Math.max(250000,Math.min(600000,Math.floor(2.7*1024*1024*8/dur)-64000))});
     const pedacos=[]; rec.ondataavailable=e=>{ if(e.data&&e.data.size) pedacos.push(e.data); };
     const parou=new Promise(r=>rec.onstop=r);
     let ativo=true; const desenha=()=>{ if(!ativo) return; ctx.drawImage(v,0,0,W,H); onProg&&onProg(Math.min(99,Math.round(v.currentTime/dur*100))); requestAnimationFrame(desenha); };
@@ -755,7 +757,7 @@ function abrirProduto(id,doClique,corIni){
   const vb=ov.querySelector(".vthumb");
   if(vb) vb.onclick=async()=>{ const m=ov.querySelector(".gal .main"); ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.toggle("on",x===vb));
     m.innerHTML='<div class="vload"><div class="spin"></div>Carregando vídeo…</div>';
-    try{ const u=await urlDoVideo(p.video); if(!ov.isConnected||!vb.classList.contains("on")) return; m.innerHTML=`<video src="${u}" controls playsinline autoplay muted loop></video>`; }
+    try{ const u=await urlDoVideo(p.video); if(!ov.isConnected||!vb.classList.contains("on")) return; m.innerHTML=`<video src="${u}" playsinline autoplay muted loop disablepictureinpicture></video><span class="vtip">Toque para pausar</span>`; const ve=m.querySelector("video"); ve.muted=true; ve.volume=0; ve.onvolumechange=()=>{ if(!ve.muted) ve.muted=true; }; ve.onclick=()=>{ ve.paused?ve.play():ve.pause(); }; }
     catch(e){ m.innerHTML='<div class="vload">Não foi possível carregar o vídeo.</div>'; } };
   const mostraFoto=i=>{ ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${fotos[i]}" alt="">`; ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.toggle("on",+x.dataset.i===i)); };
   const marcaCor=c=>{ selCor=c; ov.querySelectorAll(".csel").forEach(x=>x.classList.toggle("on",ca[+x.dataset.i]===c)); const t=$("#selCorTxt"); if(t) t.textContent=c?c.nome:"escolha"; };
@@ -961,7 +963,7 @@ function formProduto(orig,ehCopia){
   const drawVid=()=>{
     const box=$("#vidAdm"); if(!box) return;
     if(vidOcupado){ box.innerHTML=`<div class="vprog"><div class="spin"></div><span id="vpct">Compactando vídeo… 0%</span><small>Deixe esta tela aberta — leva mais ou menos o tempo do vídeo.</small></div>`; return; }
-    if(vidNovo){ box.innerHTML=`<div class="vprev"><video src="${URL.createObjectURL(vidNovo.blob)}" controls playsinline muted></video><div><b>Vídeo pronto</b><small>${vidNovo.dur}s · ${(vidNovo.blob.size/1048576).toFixed(1)} MB — será enviado ao salvar</small><button type="button" class="btn btn-bad btn-sm" id="vrm">Remover vídeo</button></div></div>`; $("#vrm").onclick=()=>{ vidNovo=null; drawVid(); }; return; }
+    if(vidNovo){ box.innerHTML=`<div class="vprev"><video src="${URL.createObjectURL(vidNovo.blob)}" playsinline muted autoplay loop></video><div><b>Vídeo pronto</b><small>${vidNovo.dur}s · ${(vidNovo.blob.size/1048576).toFixed(1)} MB — será enviado ao salvar</small><button type="button" class="btn btn-bad btn-sm" id="vrm">Remover vídeo</button></div></div>`; $("#vrm").onclick=()=>{ vidNovo=null; drawVid(); }; return; }
     if(p.video && !vidRemover){ box.innerHTML=`<div class="vprev"><div class="vbox">▶</div><div><b>Vídeo cadastrado</b><small>${p.video.dur||""}s</small><div style="display:flex;gap:6px;flex-wrap:wrap"><label class="btn btn-g btn-sm">Trocar vídeo<input type="file" accept="video/*" class="fi" id="vin"></label><button type="button" class="btn btn-bad btn-sm" id="vrm">Remover vídeo</button></div></div></div>`; $("#vrm").onclick=()=>{ vidRemover=true; drawVid(); }; }
     else box.innerHTML=`<label class="up" style="width:auto;height:auto;padding:14px 18px;grid-auto-flow:column;gap:10px"><span style="font-size:22px">🎬</span><b>Adicionar vídeo</b><input type="file" accept="video/*" class="fi" id="vin"></label>`;
     $("#vin")?.addEventListener("change",async e=>{ const f=e.target.files[0]; if(!f) return; vidOcupado=true; drawVid(); $("#salvar").disabled=true;
