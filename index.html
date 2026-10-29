@@ -406,6 +406,36 @@ const IPHONES = [
   ["iPhone 17","c17",A2],["iPhone Air","air",A3d],["iPhone 17 Pro","c17p",A3d],["iPhone 17 Pro Max","c17p",A4b],["iPhone 17e","c17e",A2],
   ["iPhone 18 Pro","c18p",A4b],["iPhone 18 Pro Max","c18p",A4b],["iPhone Duo","duo",A4b]
 ];
+/* ---------------- catálogo oficial de iPads (2019 em diante) ---------------- */
+Object.assign(CORES,{
+  ipOld:_C("Cinza-espacial=#6e6e73;Prateado=#e3e4e5;Dourado=#f5dcc6"),
+  ip9:_C("Cinza-espacial=#6e6e73;Prateado=#e3e4e5"),
+  ip10:_C("Azul=#5f8fbf;Rosa=#f0b4be;Amarelo=#f3dc6f;Prateado=#e3e4e5"),
+  mini6:_C("Cinza-espacial=#6e6e73;Rosa=#f1ccc6;Roxo=#b8a9cf;Estelar=#efe7db"),
+  miniA17:_C("Cinza-espacial=#6e6e73;Azul=#a9bccb;Roxo=#c5b9d8;Estelar=#efe7db"),
+  air4:_C("Cinza-espacial=#6e6e73;Prateado=#e3e4e5;Ouro rosa=#f1c9be;Verde=#a5bfa0;Azul-celeste=#a6c4d9"),
+  air5:_C("Cinza-espacial=#6e6e73;Estelar=#efe7db;Rosa=#e9c9c9;Roxo=#b9b0d3;Azul=#8ea6c4"),
+  airM:_C("Cinza-espacial=#6e6e73;Azul=#a9bccb;Roxo=#c5b9d8;Estelar=#efe7db"),
+  proOld:_C("Cinza-espacial=#6e6e73;Prateado=#e3e4e5"),
+  proNew:_C("Preto-espacial=#2f2f31;Prateado=#e3e4e5")
+});
+const B2="32 GB,128 GB", B64="64 GB,256 GB", B3="128 GB,256 GB,512 GB", B4="128 GB,256 GB,512 GB,1 TB", B5="128 GB,256 GB,512 GB,1 TB,2 TB", B4n="256 GB,512 GB,1 TB,2 TB";
+const IPADS = [
+  ["iPad (7ª geração)","ipOld",B2],["iPad mini (5ª geração)","ipOld",B64],["iPad Air (3ª geração)","ipOld",B64],
+  ["iPad (8ª geração)","ipOld",B2],["iPad Air (4ª geração)","air4",B64],["iPad Pro 11\" (2ª geração)","proOld",B4],["iPad Pro 12,9\" (4ª geração)","proOld",B4],
+  ["iPad (9ª geração)","ip9",B64],["iPad mini (6ª geração)","mini6",B64],["iPad Pro 11\" (3ª geração, M1)","proOld",B5],["iPad Pro 12,9\" (5ª geração, M1)","proOld",B5],
+  ["iPad Air (5ª geração, M1)","air5",B64],["iPad (10ª geração)","ip10",B64],["iPad Pro 11\" (4ª geração, M2)","proOld",B5],["iPad Pro 12,9\" (6ª geração, M2)","proOld",B5],
+  ["iPad Air 11\" (M2)","airM",B4],["iPad Air 13\" (M2)","airM",B4],["iPad Pro 11\" (M4)","proNew",B4n],["iPad Pro 13\" (M4)","proNew",B4n],["iPad mini (A17 Pro)","miniA17",B3],
+  ["iPad (A16)","ip10",B3],["iPad Air 11\" (M3)","airM",B4],["iPad Air 13\" (M3)","airM",B4],["iPad Pro 11\" (M5)","proNew",B4n],["iPad Pro 13\" (M5)","proNew",B4n],
+  ["iPad Air 11\" (M4)","airM",B4],["iPad Air 13\" (M4)","airM",B4]
+];
+function catalogoModelos(lista,cat){
+  const base=Date.now()-lista.length*1000;
+  return lista.map(([nome,ck,caps],i)=>({ nome, categoria:cat, condicao:"", preco:0, precoAntigo:0, specs:"", descricao:"", fotos:[],
+    destaque:false, ativo:false, esgotado:false, personalizavel:false, modelo:true,
+    cores:CORES[ck].map(c=>({...c,ativo:false})), armaz:caps.split(",").map(c=>({cap:c,preco:0,ativo:false})), criadoEm:base+i*1000 }));
+}
+const catalogoIpads = () => catalogoModelos(IPADS,"iPad");
 function catalogoIphones(){
   const base=Date.now()-IPHONES.length*1000;
   return IPHONES.map(([nome,ck,caps],i)=>({ nome, categoria:"iPhone", condicao:"", preco:0, precoAntigo:0, specs:"", descricao:"", fotos:[],
@@ -483,12 +513,12 @@ function compress(file, max=1000, type="image/jpeg", q=.78, limitKB=220){
    ============================================================ */
 let DB;
 function demoDB(){
-  const K="loja_demo_v4"; try{ ["loja_demo_v1","loja_demo_v2","loja_demo_v3"].forEach(k=>localStorage.removeItem(k)); }catch{}
+  const K="loja_demo_v5"; try{ ["loja_demo_v1","loja_demo_v2","loja_demo_v3","loja_demo_v4"].forEach(k=>localStorage.removeItem(k)); }catch{}
   const load=()=>{ try{ return JSON.parse(localStorage.getItem(K))||null; }catch{ return null; } };
   const save=d=>{ try{ localStorage.setItem(K,JSON.stringify(d)); }catch(e){ toast("Armazenamento do navegador cheio"); throw e; } };
   let d=load();
   if(!d){
-    const ips=catalogoIphones().map(p=>({...p,id:uid()}));
+    const ips=[...catalogoIphones(),...catalogoIpads()].map(p=>({...p,id:uid()}));
     const ativa=(nome,cores,caps)=>{ const p=ips.find(x=>x.nome===nome); p.ativo=true; p.cores.forEach(c=>c.ativo=cores.includes(c.nome)); p.armaz.forEach(a=>a.ativo=caps.includes(a.cap)); };
     ativa("iPhone 17 Pro Max",["Laranja-cósmico","Azul-intenso"],["256 GB","512 GB"]);
     ativa("iPhone 16",["Preto","Rosa","Ultramarino"],["128 GB"]);
@@ -865,27 +895,31 @@ function renderLogin(){
 }
 let admQ="", admCat="Todas", admSt="todos";
 async function autoCadastrarIphones(){
-  if(DEMO || S.loja.iphonesImportados || window._seeding) return;
+  if(DEMO || window._seeding) return;
+  const kits=[["iphonesImportados","iPhone",catalogoIphones],["ipadsImportados","iPad",catalogoIpads]].filter(k=>!S.loja[k[0]]);
+  if(!kits.length) return;
   window._seeding=true;
   try{
-    const existe=new Set(S.produtos.map(p=>p.nome.trim().toLowerCase()));
-    const novos=catalogoIphones().filter(p=>!existe.has(p.nome.toLowerCase()));
-    if(novos.length){ toast(`Cadastrando ${novos.length} modelos de iPhone…`);
-      for(const p of novos){ const sv=await DB.saveProduto(p); S.produtos.push(sv); } }
-    S.loja={...S.loja,iphonesImportados:true}; await DB.saveLoja(S.loja);
-    if(novos.length){ toast(`${novos.length} modelos de iPhone cadastrados (ocultos). Marque os que você tem.`); admCat="iPhone"; }
+    for(const [flag,cat,fn] of kits){
+      const existe=new Set(S.produtos.map(p=>p.nome.trim().toLowerCase()));
+      const novos=fn().filter(p=>!existe.has(p.nome.toLowerCase()));
+      if(novos.length){ toast(`Cadastrando ${novos.length} modelos de ${cat}…`);
+        for(const p of novos){ const sv=await DB.saveProduto(p); S.produtos.push(sv); } }
+      S.loja={...S.loja,[flag]:true}; await DB.saveLoja(S.loja);
+      if(novos.length){ toast(`${novos.length} modelos de ${cat} cadastrados (ocultos). Marque os que você tem.`); admCat=cat; }
+    }
     if(location.hash==="#admin") renderAdmin();
-  }catch(e){ toast("Erro ao cadastrar iPhones: "+e.message); }
+  }catch(e){ toast("Erro ao cadastrar modelos: "+e.message); }
   window._seeding=false;
 }
 async function importarIphones(){
   const existe=new Set(S.produtos.map(p=>p.nome.trim().toLowerCase()));
-  const novos=catalogoIphones().filter(p=>!existe.has(p.nome.toLowerCase()));
-  if(!novos.length){ toast("Todos os modelos de iPhone já estão no cadastro"); return; }
-  if(!confirmar(`Adicionar ${novos.length} modelos de iPhone (do 11 ao mais novo) com as cores oficiais?\n\nEles entram OCULTOS. Depois é só abrir cada um, marcar as cores e armazenamentos que você tem e salvar.`)) return;
+  const novos=[...catalogoIphones(),...catalogoIpads()].filter(p=>!existe.has(p.nome.toLowerCase()));
+  if(!novos.length){ toast("Todos os modelos de iPhone e iPad já estão no cadastro"); return; }
+  if(!confirmar(`Adicionar ${novos.length} modelos (iPhone do 11 em diante e iPad de 2019 em diante) com as cores oficiais?\n\nEles entram OCULTOS. Depois é só abrir cada um, marcar as cores e armazenamentos que você tem e salvar.`)) return;
   const b=$("#impIph"); if(b){ b.disabled=true; }
   let n=0; for(const p of novos){ try{ const sv=await DB.saveProduto(p); S.produtos.push(sv); n++; if(b) b.textContent=`Importando… ${n}/${novos.length}`; }catch(e){ toast("Erro: "+e.message); break; } }
-  toast(`${n} modelos adicionados`); admCat="iPhone"; admProdutos();
+  toast(`${n} modelos adicionados`); admCat=novos.every(p=>p.categoria==="iPad")?"iPad":"Todas"; admProdutos();
 }
 function admProdutos(){
   const ps=S.produtos;
@@ -902,7 +936,7 @@ function admProdutos(){
     <div class="tools"><label class="search"><span>🔍</span><input id="aq" placeholder="Buscar no estoque…" value="${esc(admQ)}"></label>
       <select class="inp admsel" id="acat"><option value="Todas">Todas as categorias</option>${catsAdm.map(c=>`<option ${admCat===c?"selected":""}>${esc(c)}</option>`).join("")}</select>
       <select class="inp admsel" id="ast"><option value="todos">Todos</option><option value="site" ${admSt==="site"?"selected":""}>No site</option><option value="ocultos" ${admSt==="ocultos"?"selected":""}>Ocultos</option></select>
-      <button class="btn btn-g" id="impIph">📱 Importar iPhones</button><button class="btn btn-p" id="novo">+ Novo produto</button></div>
+      <button class="btn btn-g" id="impIph">📱 Importar modelos Apple</button><button class="btn btn-p" id="novo">+ Novo produto</button></div>
     <div class="plist">${list.length?list.map(p=>`
       <div class="prow ${p.ativo===false?"inativo":""}">
         <div class="th">${capa(p)?`<img src="${capa(p)}" alt="">`:`<div style="display:grid;place-items:center;height:100%">${PH(p.categoria)}</div>`}</div>
@@ -980,6 +1014,7 @@ function formProduto(orig,ehCopia){
     $("#fotos").innerHTML = p.fotos.map((f,i)=>{ const cn=p.fotosCor[i], c=p.cores.find(x=>x.nome===cn);
       return `<div class="fwrap"><div class="foto"><img src="${f}" alt="">${i===0?'<span class="capa">CAPA</span>':""}<div class="fx"><button type="button" data-m="${i}" title="Tornar capa">★</button><button type="button" data-r="${i}" title="Remover">✕</button></div></div>
         ${p.cores.length?`<label class="fcor">${c?swatch(c,12):'<i class="sw" style="--c:transparent;width:12px;height:12px;border:1px dashed var(--mut)"></i>'}<select data-fc="${i}"><option value="">Todas as cores</option>${p.cores.map(x=>`<option value="${esc(x.nome)}" ${cn===x.nome?"selected":""}>${esc(x.nome)}</option>`).join("")}</select></label>`:""}</div>`; }).join("")
+      + (!p.cores.length&&p.fotos.length?`<p class="hint" style="width:100%">Para vincular cada foto a uma cor, cadastre as cores na seção <b>Cores</b> abaixo.</p>`:"")
       + (p.fotos.length<MAXF?`<label class="up"><span style="font-size:26px;line-height:1">📷</span><b>Adicionar fotos</b><input type="file" accept="image/*" multiple class="fi" id="fin"></label>`:"");
     $("#fotos").querySelectorAll("[data-r]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.r; p.fotos.splice(i,1); p.fotosCor.splice(i,1); drawFotos(); drawCores(); });
     $("#fotos").querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.m; const [f]=p.fotos.splice(i,1); const [n]=p.fotosCor.splice(i,1); p.fotos.unshift(f); p.fotosCor.unshift(n); drawFotos(); });
@@ -996,7 +1031,7 @@ function formProduto(orig,ehCopia){
   const drawCores0=()=>{
     $("#coresAdm").innerHTML = p.cores.length ? `<div class="cores-tools"><button type="button" class="lnk" data-all="1">Marcar todas</button><button type="button" class="lnk" data-all="0">Desmarcar todas</button></div>`+
       p.cores.map((c,i)=>`<label class="cchip ${c.ativo?"on":""}"><input type="checkbox" data-ci="${i}" ${c.ativo?"checked":""}>${fotoDaCor(p,c.nome)?`<img class="cfoto" src="${fotoDaCor(p,c.nome)}" alt="">`:swatch(c,22)}<span>${esc(c.nome)}</span><button type="button" class="rm" data-cr="${i}" title="Remover cor">×</button></label>`).join("")
-      : '<p class="hint">Nenhuma cor cadastrada. Adicione abaixo (opcional).</p>';
+      : '<p class="hint">Nenhuma cor cadastrada. Adicione as cores abaixo — depois elas aparecem embaixo de cada foto para você vincular.</p>';
     $("#coresAdm").querySelectorAll("[data-ci]").forEach(x=>x.onchange=()=>{ p.cores[+x.dataset.ci].ativo=x.checked; if(x.checked) autoMostrar(); drawCores(); });
     $("#coresAdm").querySelectorAll("[data-cr]").forEach(x=>x.onclick=e=>{ e.preventDefault(); p.cores.splice(+x.dataset.cr,1); drawCores(); drawFotos(); });
     $("#coresAdm").querySelectorAll("[data-all]").forEach(x=>x.onclick=()=>{ p.cores.forEach(c=>c.ativo=x.dataset.all==="1"); if(x.dataset.all==="1") autoMostrar(); drawCores(); });
