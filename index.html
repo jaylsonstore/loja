@@ -841,14 +841,17 @@ function abrirProduto(id,doClique,corIni){
     try{ const u=await urlDoVideo(p.video); if(!ov.isConnected||!vb.classList.contains("on")) return; m.innerHTML=`<video src="${u}" playsinline autoplay muted loop disablepictureinpicture></video><span class="vtip">Toque para pausar</span>`; const ve=m.querySelector("video"); ve.muted=true; ve.volume=0; ve.onvolumechange=()=>{ if(!ve.muted) ve.muted=true; }; ve.onclick=()=>{ ve.paused?ve.play():ve.pause(); }; }
     catch(e){ m.innerHTML='<div class="vload">Não foi possível carregar o vídeo.</div>'; } };
   const mostraFoto=i=>{ ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${fotos[i]}" alt="">`; ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.toggle("on",+x.dataset.i===i)); };
-  const marcaCor=c=>{ selCor=c; ov.querySelectorAll(".csel").forEach(x=>x.classList.toggle("on",ca[+x.dataset.i]===c)); const t=$("#selCorTxt"); if(t) t.textContent=c?c.nome:"escolha"; };
+  const filtraThumbs=()=>{ const tb=ov.querySelector(".thumbs"); if(!tb) return; const fc=p.fotosCor||[]; let vis=0;
+    tb.querySelectorAll("button[data-i]").forEach(x=>{ const i=+x.dataset.i; const ok=!selCor || !fc[i] || fc[i]===selCor.nome; x.style.display=ok?"":"none"; if(ok) vis++; });
+    tb.style.display = (vis>1 || tb.querySelector(".vthumb")) ? "" : "none"; };
+  const marcaCor=c=>{ selCor=c; ov.querySelectorAll(".csel").forEach(x=>x.classList.toggle("on",ca[+x.dataset.i]===c)); const t=$("#selCorTxt"); if(t) t.textContent=c?c.nome:"escolha"; filtraThumbs(); };
   ov.querySelectorAll(".thumbs button[data-i]").forEach(b=>b.onclick=()=>{ const i=+b.dataset.i; mostraFoto(i); const cn=(p.fotosCor||[])[i]; const c=cn&&ca.find(x=>x.nome===cn); if(c){ marcaCor(c); if(typeof atualizaPreco==="function") atualizaPreco(); atualizaWa(); } });
   const atualizaWa=()=>{ const t=$("#persoTxt")?.value.trim(); const url=location.href.split("#")[0]+"#p="+p.id; const pr=precoAtual();
     $("#comprar").href=waLink(`Olá! Tenho interesse no produto:\n*${p.nome}*${selCap?` ${selCap.cap}`:""}${pr?` — ${brl(pr)}`:""}${selCor?`\nCor: ${selCor.nome}`:""}${p.condicao?`\nCondição: ${p.condicao}`:""}${t?`\nPersonalização: "${t}"`:""}\n${url}`); };
   const tinge=()=>{ if(!selCor) return; const f=fotoParaCor(p,selCor.nome); if(f){ const i=fotos.indexOf(f); if(i>=0) return mostraFoto(i); ov.querySelector(".gal .main").innerHTML=`<img id="mainimg" src="${f}" alt="">`; return; }
     ov.querySelector(".gal .main").innerHTML=PH(p.categoria); ov.querySelectorAll(".thumbs button").forEach(x=>x.classList.remove("on"));
     const sv=ov.querySelector(".gal .main svg"); if(sv&&selCor){ sv.style.color=selCor.hex; sv.style.opacity="1"; sv.style.filter="drop-shadow(0 0 1px rgba(0,0,0,.35))"; } };
-  tinge();
+  tinge(); filtraThumbs();
   const atualizaPreco=()=>{ const pr=precoAtual(), o=p.precoAntigo>pr&&pr?Math.round((1-pr/p.precoAntigo)*100):0;
     $("#mprice").innerHTML = pr?`${precoVaria()?'<small class="apartir" style="width:100%">a partir de</small>':""}<b>${brl(pr)}</b>${o?`<s>${brl(p.precoAntigo)}</s> <span class="tag off" style="position:static">-${o}%</span>`:""}`:"<b>Sob consulta</b>";
     ov.querySelectorAll("[data-cp]").forEach(sm=>{ const a=aa[+sm.dataset.cp]; const vs=precosPossiveis(p,a.cap,selCor&&selCor.nome); sm.textContent=vs.length?((!selCor&&new Set(vs).size>1)?"a partir de "+brl(Math.min(...vs)):brl(Math.min(...vs))):""; }); };
