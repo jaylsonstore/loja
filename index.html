@@ -2539,7 +2539,7 @@ function renderVitrine(cat){
   vtProximo(1);
 }
 /* ---- Auto-atualização: se publicar versão nova, o tablet recarrega sozinho ---- */
-const APP_VER="2026-11-26c";
+const APP_VER="2026-11-26d";
 async function vtChecaVersao(){
   try{ const r=await fetch(location.pathname+"?v="+Date.now(),{cache:"no-store"}); if(!r.ok) return;
     const m=(await r.text()).match(/APP_VER="([^"]+)"/); if(m && m[1]!==APP_VER) location.reload(); }catch(e){}
@@ -2555,17 +2555,19 @@ async function ntCarregar(){
 }
 function ntQuando(iso){ if(!iso) return ""; const m=Math.round((Date.now()-Date.parse(iso))/60000); if(!(m>=0)) return "";
   if(m<2) return "agora"; if(m<60) return `há ${m} min`; const h=Math.round(m/60); return h<24?`há ${h} h`:`há ${Math.round(h/24)} d`; }
+function vtParaVideos(){ document.querySelectorAll("#vtStage video").forEach(v=>{ try{ v.onended=null; v.onerror=null; v.pause(); v.removeAttribute("src"); v.load(); }catch(e){} }); }
 function vtNoticia(){
-  const n=NT.itens[NT.idx++%NT.itens.length]; VT.emNoticia=true; VT.desde=0; VT.itens=[{noticia:true}]; VT.j=0; VT.p=null;
+  const n=NT.itens[NT.idx++%NT.itens.length]; VT.emNoticia=true; VT.noticiaAte=Infinity; VT.desde=0; VT.itens=[{noticia:true}]; VT.j=0; VT.p=null; VT.step=(VT.step||0)+1; const me=VT, passo=VT.step;
+  clearTimeout(VT.timer); vtParaVideos();
   const st=$("#vtStage"); st.classList.add("fade");
-  setTimeout(()=>{ if(!VT) return;
+  setTimeout(()=>{ if(VT!==me||VT.step!==passo) return;
     st.innerHTML=`<article class="vt-news" style="--nc:${/^#[0-9a-f]{3,8}$/i.test(n.cor||"")?n.cor:"#a8998a"}">
       <div><div class="nk"><span>📰 Notícias</span><b>${esc(n.fonte||"")}</b>${ntQuando(n.data)}</div>
       <h2>${esc(n.titulo)}</h2>${n.resumo?`<p>${esc(n.resumo)}</p>`:""}</div>
       ${n.link?`<div class="nq" id="vtNq"><span>Leia no celular</span></div>`:""}</article>`;
     if(n.link){ const c=qrCanvas(n.link,300); if(c) $("#vtNq").prepend(c); else $("#vtNq")?.remove(); }
     $("#vtCont").textContent=`Fonte: ${n.fonte||""}`;
-    st.classList.remove("fade"); const chars=(n.titulo||"").length+(n.resumo||"").length; vtAgendar(Math.max(22000,Math.min(35000,8000+chars*90))); },450);
+    st.classList.remove("fade"); const chars=(n.titulo||"").length+(n.resumo||"").length, tempo=Math.max(22000,Math.min(35000,8000+chars*90)); VT.noticiaAte=Date.now()+tempo-500; vtAgendar(tempo); },450);
 }
 function vtProximo(dir){
   if(!VT) return; ntCarregar();
@@ -2576,9 +2578,10 @@ function vtProximo(dir){
   if(!VT.lista.length){ st.innerHTML=`<div class="vt-vazio">Nenhum produto para mostrar${VT.cat?` em “${esc(VT.cat)}”`:""}.<br><small>Marque produtos como “Mostrar no site” no painel.</small></div>`; $("#vtCont").textContent=""; clearTimeout(VT.timer); VT.timer=setTimeout(()=>vtProximo(1),30000); return; }
   VT.i=((VT.i+dir)%VT.lista.length+VT.lista.length)%VT.lista.length; VT.j=0;
   const p=VT.lista[VT.i]; VT.p=p; VT.itens=vtItens(p); if(dir>0) VT.desde=(VT.desde||0)+1;
+  VT.step=(VT.step||0)+1; const me=VT, passo=VT.step; clearTimeout(VT.timer); vtParaVideos();
   const ca=coresAtivas(p), aa=capsAtivas(p);
   st.classList.add("fade");
-  setTimeout(()=>{ if(!VT) return;
+  setTimeout(()=>{ if(VT!==me||VT.step!==passo) return;
     st.innerHTML=`<div class="vt-media" id="vtMedia"></div>
       <div class="vt-info">
         <div class="vt-cat">${esc(p.categoria||"")}${p.condicao?` · <b>${esc(p.condicao)}</b>`:""}</div>
@@ -2596,6 +2599,7 @@ function vtProximo(dir){
 }
 function vtMostraItem(){
   if(!VT||VT.emNoticia) return; const p=VT.p, it=VT.itens[VT.j], m=$("#vtMedia"); if(!m) return;
+  VT.step=(VT.step||0)+1; const me=VT, passo=VT.step; const ok=()=>VT===me&&VT.step===passo; vtParaVideos();
   document.querySelectorAll(".vt-cor").forEach(x=>x.classList.toggle("on",!!it.cor&&x.dataset.cor===it.cor.nome));
   const vs=precosPossiveis(p,null,it.cor&&it.cor.nome); const pr=vs.length?Math.min(...vs):(p.preco||0); const varia=new Set(vs).size>1;
   const off=p.precoAntigo>pr&&pr?Math.round((1-pr/p.precoAntigo)*100):0;
@@ -2603,7 +2607,7 @@ function vtMostraItem(){
   let dur=4500;
   if(it.video){
     m.innerHTML='<div class="vload"><div class="spin"></div></div>';
-    urlDoVideo(p.video).then(u=>{ if(!VT||VT.p!==p) return; m.innerHTML=`<video src="${u}" muted playsinline autoplay></video>`; const v=m.querySelector("video"); v.muted=true; v.onended=()=>vtAvancaItem(); }).catch(()=>vtAvancaItem());
+    urlDoVideo(p.video).then(u=>{ if(!ok()) return; m.innerHTML=`<video src="${u}" muted playsinline autoplay></video>`; const v=m.querySelector("video"); v.muted=true; v.onended=()=>{ if(ok()) vtAvancaItem(); }; v.onerror=()=>{ if(ok()) vtAvancaItem(); }; }).catch(()=>{ if(ok()) vtAvancaItem(); });
     dur=Math.min(15000,Math.max(4000,(p.video.dur||10)*1000));
   } else if(it.src){ m.innerHTML=`<img src="${it.src}" alt="">`; }
   else { m.innerHTML=PH(p.categoria); const sv=m.querySelector("svg"); if(sv&&it.cor){ sv.style.color=it.cor.hex; sv.style.opacity="1"; } }
@@ -2614,7 +2618,8 @@ function vtAgendar(dur){
   const bar=$("#vtBar"); if(bar){ bar.style.animation="none"; void bar.offsetWidth; bar.style.animation=`vtbar ${dur}ms linear forwards`; }
   VT.timer=setTimeout(vtAvancaItem,dur);
 }
-function vtAvancaItem(){ if(!VT||VT.pausa) return; clearTimeout(VT.timer); VT.j++; if(VT.j>=VT.itens.length) vtProximo(1); else vtMostraItem(); }
+function vtAvancaItem(){ if(!VT||VT.pausa) return;
+  if(VT.emNoticia && Date.now()<(VT.noticiaAte||Infinity)){ vtAgendar(VT.noticiaAte-Date.now()+600); return; } clearTimeout(VT.timer); VT.j++; if(VT.j>=VT.itens.length) vtProximo(1); else vtMostraItem(); }
 
 /* ============================================================
    ROTEAMENTO
