@@ -58,6 +58,8 @@ def ler(conteudo, nome, google=False):
         if resumo and resumo.lower().startswith(titulo.lower()[:40]):
             resumo = ""
         d = data(it)
+        if re.match(r"^(V[IÍ]DEOS?|AO VIVO|PODCAST|PLAYLIST)\b", titulo, re.I):
+            continue  # pula chamadas de vídeo/programa
         if titulo and link:
             out.append({"fonte": nome, "titulo": titulo, "resumo": resumo, "link": link,
                         "data": d.isoformat() if d else None})
