@@ -2508,7 +2508,7 @@ function vtItens(p){
   if(p.video) seq.push({video:true,cor:null});
   return seq;
 }
-function pararVitrine(){ if(!VT) return; clearTimeout(VT.timer); clearTimeout(VT.ctrlT); clearTimeout(VT.reloadT); try{ VT.unsubP&&VT.unsubP(); VT.unsubL&&VT.unsubL(); }catch{} try{ VT.lock&&VT.lock.release(); }catch{} document.removeEventListener("visibilitychange",VT.onVis); document.body.classList.remove("vt-on"); VT=null; }
+function pararVitrine(){ if(!VT) return; clearTimeout(VT.timer); clearTimeout(VT.ctrlT); clearTimeout(VT.reloadT); clearInterval(VT.verT); try{ VT.unsubP&&VT.unsubP(); VT.unsubL&&VT.unsubL(); }catch{} try{ VT.lock&&VT.lock.release(); }catch{} document.removeEventListener("visibilitychange",VT.onVis); document.body.classList.remove("vt-on"); VT=null; }
 async function vtWake(){ try{ if(VT && "wakeLock" in navigator && document.visibilityState==="visible") VT.lock=await navigator.wakeLock.request("screen"); }catch{} }
 function renderVitrine(cat){
   pararVitrine();
@@ -2535,8 +2535,14 @@ function renderVitrine(cat){
   VT.unsubP=DB.watchProdutos(ps=>{ S.produtos=ps; });
   VT.unsubL=DB.watchLoja(lj=>{ S.loja=lj; aplicarIdentidade(); });
   VT.reloadT=setTimeout(()=>location.reload(), 12*3600*1000);
-  NT.ts=0; ntCarregar();
+  NT.ts=0; ntCarregar(); VT.verT=setInterval(vtChecaVersao,10*60*1000);
   vtProximo(1);
+}
+/* ---- Auto-atualização: se publicar versão nova, o tablet recarrega sozinho ---- */
+const APP_VER="2026-11-26b";
+async function vtChecaVersao(){
+  try{ const r=await fetch(location.pathname+"?v="+Date.now(),{cache:"no-store"}); if(!r.ok) return;
+    const m=(await r.text()).match(/APP_VER="([^"]+)"/); if(m && m[1]!==APP_VER) location.reload(); }catch(e){}
 }
 /* ---- Notícias: noticias.json é atualizado de hora em hora pelo GitHub Actions ---- */
 const NT={itens:[],ts:0,idx:0};
