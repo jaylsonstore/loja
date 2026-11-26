@@ -2539,7 +2539,7 @@ function renderVitrine(cat){
   vtProximo(1);
 }
 /* ---- Auto-atualização: se publicar versão nova, o tablet recarrega sozinho ---- */
-const APP_VER="2026-11-26b";
+const APP_VER="2026-11-26c";
 async function vtChecaVersao(){
   try{ const r=await fetch(location.pathname+"?v="+Date.now(),{cache:"no-store"}); if(!r.ok) return;
     const m=(await r.text()).match(/APP_VER="([^"]+)"/); if(m && m[1]!==APP_VER) location.reload(); }catch(e){}
@@ -2565,7 +2565,7 @@ function vtNoticia(){
       ${n.link?`<div class="nq" id="vtNq"><span>Leia no celular</span></div>`:""}</article>`;
     if(n.link){ const c=qrCanvas(n.link,300); if(c) $("#vtNq").prepend(c); else $("#vtNq")?.remove(); }
     $("#vtCont").textContent=`Fonte: ${n.fonte||""}`;
-    st.classList.remove("fade"); vtAgendar(13000); },450);
+    st.classList.remove("fade"); const chars=(n.titulo||"").length+(n.resumo||"").length; vtAgendar(Math.max(22000,Math.min(35000,8000+chars*90))); },450);
 }
 function vtProximo(dir){
   if(!VT) return; ntCarregar();
