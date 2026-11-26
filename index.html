@@ -381,6 +381,16 @@ body.vt-on .fab{display:none}
 .vt.ctrl .vt-ctrl{opacity:1;pointer-events:auto;transform:translate(-50%,0)}
 .vt-ctrl button{padding:12px 18px;border-radius:999px;background:var(--card);border:1px solid var(--line);font-weight:700;font-size:16px;cursor:pointer}
 .vt-vazio{grid-column:1/-1;text-align:center;font-size:3vh;color:var(--mut)}
+.vt-news{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5vw;align-items:center;width:100%;max-width:1500px;justify-self:center;background:var(--card);border-radius:3.2vh;padding:6vh 5vw;box-shadow:0 30px 80px rgba(60,40,20,.14);position:relative;overflow:hidden}
+.vt-news::before{content:"";position:absolute;left:0;top:0;bottom:0;width:1.1vh;background:var(--nc,#a8998a)}
+.vt-news .nk{display:flex;align-items:center;gap:1.2vw;flex-wrap:wrap;font-size:clamp(13px,2.2vh,24px);color:var(--mut);margin-bottom:2.6vh}
+.vt-news .nk b{background:var(--nc,#a8998a);color:#fff;padding:.5vh 1.4vw;border-radius:999px;letter-spacing:.02em}
+.vt-news .nk span{text-transform:uppercase;letter-spacing:.14em;font-weight:600}
+.vt-news h2{font-size:clamp(28px,6vh,72px);line-height:1.08;letter-spacing:-.03em;margin:0;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.vt-news p{font-size:clamp(15px,2.7vh,30px);color:var(--mut);margin:2.6vh 0 0;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.vt-news .nq{display:grid;justify-items:center;gap:1vh;font-size:clamp(12px,1.9vh,20px);color:var(--mut);text-align:center}
+.vt-news .nq canvas{width:clamp(110px,22vh,230px);height:auto;border-radius:12px;display:block}
+@media (orientation:portrait){.vt-news{grid-template-columns:1fr;padding:5vh 7vw}.vt-news h2{font-size:clamp(26px,4.4vh,60px);-webkit-line-clamp:5}.vt-news .nq{justify-self:start}}
 .vt-vazio small{font-size:2vh}
 @media (orientation:portrait){
   .vt-stage{grid-template-columns:1fr;grid-template-rows:auto auto;gap:3vh;align-content:center}
@@ -2525,14 +2535,41 @@ function renderVitrine(cat){
   VT.unsubP=DB.watchProdutos(ps=>{ S.produtos=ps; });
   VT.unsubL=DB.watchLoja(lj=>{ S.loja=lj; aplicarIdentidade(); });
   VT.reloadT=setTimeout(()=>location.reload(), 12*3600*1000);
+  NT.ts=0; ntCarregar();
   vtProximo(1);
 }
+/* ---- Notícias: noticias.json é atualizado de hora em hora pelo GitHub Actions ---- */
+const NT={itens:[],ts:0,idx:0};
+async function ntCarregar(){
+  if(Date.now()-NT.ts<20*60*1000) return; NT.ts=Date.now();
+  try{ const r=await fetch("noticias.json?t="+Math.floor(Date.now()/600000),{cache:"no-store"}); if(!r.ok) return;
+    const d=await r.json(); const lim=Date.now()-36*3600*1000;
+    const it=(d.itens||[]).filter(n=>n&&n.titulo&&(!n.data||Date.parse(n.data)>lim));
+    if(it.length){ NT.itens=it; NT.idx=NT.idx%it.length; } }catch(e){}
+}
+function ntQuando(iso){ if(!iso) return ""; const m=Math.round((Date.now()-Date.parse(iso))/60000); if(!(m>=0)) return "";
+  if(m<2) return "agora"; if(m<60) return `há ${m} min`; const h=Math.round(m/60); return h<24?`há ${h} h`:`há ${Math.round(h/24)} d`; }
+function vtNoticia(){
+  const n=NT.itens[NT.idx++%NT.itens.length]; VT.emNoticia=true; VT.desde=0; VT.itens=[{noticia:true}]; VT.j=0; VT.p=null;
+  const st=$("#vtStage"); st.classList.add("fade");
+  setTimeout(()=>{ if(!VT) return;
+    st.innerHTML=`<article class="vt-news" style="--nc:${/^#[0-9a-f]{3,8}$/i.test(n.cor||"")?n.cor:"#a8998a"}">
+      <div><div class="nk"><span>📰 Notícias</span><b>${esc(n.fonte||"")}</b>${ntQuando(n.data)}</div>
+      <h2>${esc(n.titulo)}</h2>${n.resumo?`<p>${esc(n.resumo)}</p>`:""}</div>
+      ${n.link?`<div class="nq" id="vtNq"><span>Leia no celular</span></div>`:""}</article>`;
+    if(n.link){ const c=qrCanvas(n.link,300); if(c) $("#vtNq").prepend(c); else $("#vtNq")?.remove(); }
+    $("#vtCont").textContent=`Fonte: ${n.fonte||""}`;
+    st.classList.remove("fade"); vtAgendar(13000); },450);
+}
 function vtProximo(dir){
-  if(!VT) return; VT.lista=vtLista();
+  if(!VT) return; ntCarregar();
+  if(VT.emNoticia){ VT.emNoticia=false; if(dir<0) dir=0; }
+  else if(dir>0 && (VT.desde||0)>=4 && NT.itens.length){ vtNoticia(); return; }
+  VT.lista=vtLista();
   const st=$("#vtStage");
   if(!VT.lista.length){ st.innerHTML=`<div class="vt-vazio">Nenhum produto para mostrar${VT.cat?` em “${esc(VT.cat)}”`:""}.<br><small>Marque produtos como “Mostrar no site” no painel.</small></div>`; $("#vtCont").textContent=""; clearTimeout(VT.timer); VT.timer=setTimeout(()=>vtProximo(1),30000); return; }
   VT.i=((VT.i+dir)%VT.lista.length+VT.lista.length)%VT.lista.length; VT.j=0;
-  const p=VT.lista[VT.i]; VT.p=p; VT.itens=vtItens(p);
+  const p=VT.lista[VT.i]; VT.p=p; VT.itens=vtItens(p); if(dir>0) VT.desde=(VT.desde||0)+1;
   const ca=coresAtivas(p), aa=capsAtivas(p);
   st.classList.add("fade");
   setTimeout(()=>{ if(!VT) return;
@@ -2552,7 +2589,7 @@ function vtProximo(dir){
     st.classList.remove("fade"); vtMostraItem(); },450);
 }
 function vtMostraItem(){
-  if(!VT) return; const p=VT.p, it=VT.itens[VT.j], m=$("#vtMedia"); if(!m) return;
+  if(!VT||VT.emNoticia) return; const p=VT.p, it=VT.itens[VT.j], m=$("#vtMedia"); if(!m) return;
   document.querySelectorAll(".vt-cor").forEach(x=>x.classList.toggle("on",!!it.cor&&x.dataset.cor===it.cor.nome));
   const vs=precosPossiveis(p,null,it.cor&&it.cor.nome); const pr=vs.length?Math.min(...vs):(p.preco||0); const varia=new Set(vs).size>1;
   const off=p.precoAntigo>pr&&pr?Math.round((1-pr/p.precoAntigo)*100):0;
