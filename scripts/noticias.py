@@ -24,11 +24,13 @@ CAPAS = {
 RE_A = re.compile(r'<a\b([^>]*)>(.*?)</a>', re.S | re.I)
 RE_HREF = re.compile(r'href\s*=\s*["\']([^"\']+)["\']', re.I)
 RE_TIT = re.compile(r'(?:title|aria-label)\s*=\s*["\']([^"\']{25,220})["\']', re.I)
-RUIDO = re.compile(r"assine|newsletter|podcast|^v[ií]deos?\b|ao vivo|cookies|termos de uso|publicidade|ofertas? do dia|cupo(m|ns)|melhores promoções", re.I)
+RUIDO = re.compile(r"assine|newsletter|podcast|^v[ií]deos?\b|ao vivo|cookies|termos de uso|publicidade|ofertas? do dia|cupo(m|ns)|melhores promoções|_edi[cç][aã]o de", re.I)
 
 def eh_materia(url, dominio):
     u = urllib.parse.urlparse(url)
     if dominio not in u.netloc:
+        return False
+    if re.search(r"edicoes|edicao-|/edicao|/tag/|/autor/|/categoria/", u.path, re.I):
         return False
     caminho = u.path
     if caminho.endswith((".ghtml", ".shtml")) or re.search(r"/20\d\d/\d\d/", caminho):
