@@ -9,6 +9,52 @@ def gnews(site):
     q = urllib.parse.quote(f"site:{site} when:1d")
     return f"https://news.google.com/rss/search?q={q}&hl=pt-BR&gl=BR&ceid=BR:pt-419"
 
+# página inicial de cada portal: as manchetes em destaque vêm primeiro no HTML
+CAPAS = {
+    "g1": "https://g1.globo.com/",
+    "Estadão": "https://www.estadao.com.br/",
+    "Folha": "https://www.folha.uol.com.br/",
+    "TechTudo": "https://www.techtudo.com.br/",
+    "Olhar Digital": "https://olhardigital.com.br/",
+    "ge": "https://ge.globo.com/",
+}
+RE_A = re.compile(r'<a\b([^>]*)>(.*?)</a>', re.S | re.I)
+RE_HREF = re.compile(r'href\s*=\s*["\']([^"\']+)["\']', re.I)
+RE_TIT = re.compile(r'(?:title|aria-label)\s*=\s*["\']([^"\']{25,220})["\']', re.I)
+RUIDO = re.compile(r"assine|newsletter|podcast|^v[ií]deos?\b|ao vivo|cookies|termos de uso|publicidade|oferta|cupom", re.I)
+
+def eh_materia(url, dominio):
+    u = urllib.parse.urlparse(url)
+    if dominio not in u.netloc:
+        return False
+    caminho = u.path
+    if caminho.endswith((".ghtml", ".shtml")) or re.search(r"/20\d\d/\d\d/", caminho):
+        return True
+    ult = [x for x in caminho.split("/") if x]
+    return len(ult) >= 2 and ult[-1].count("-") >= 4
+
+def destaques(nome, dominio, limite=12):
+    raw = baixar(CAPAS[nome]).decode("utf-8", "replace")
+    out, vistos = [], set()
+    for attrs, inner in RE_A.findall(raw):
+        m = RE_HREF.search(attrs)
+        if not m:
+            continue
+        link = urllib.parse.urljoin(CAPAS[nome], html.unescape(m.group(1))).split("#")[0]
+        if not eh_materia(link, dominio) or link in vistos:
+            continue
+        titulo = limpa(inner)
+        if len(titulo) < 30:
+            mt = RE_TIT.search(attrs)
+            titulo = limpa(mt.group(1)) if mt else titulo
+        if not (30 <= len(titulo) <= 220) or RUIDO.search(titulo):
+            continue
+        vistos.add(link)
+        out.append({"fonte": nome, "titulo": titulo, "resumo": "", "link": link, "data": None})
+        if len(out) >= limite:
+            break
+    return out
+
 FONTES = [
     ("g1",            "#c4170c", ["https://g1.globo.com/rss/g1/"], "g1.globo.com"),
     ("Estadão",       "#1d3f6e", ["https://www.estadao.com.br/arc/outboundfeeds/feeds/rss/sections/brasil/",
@@ -18,7 +64,7 @@ FONTES = [
     ("Olhar Digital", "#0d6efd", ["https://olhardigital.com.br/feed/"], "olhardigital.com.br"),
     ("ge",            "#06aa48", ["https://ge.globo.com/rss/ge/"], "ge.globo.com"),
 ]
-POR_FONTE = 5
+POR_FONTE = 6
 UA = {"User-Agent": "Mozilla/5.0 (JaylsonStore vitrine; +https://jaylsonstore.github.io/loja/)"}
 
 def baixar(url):
@@ -69,6 +115,12 @@ def main():
     agora = datetime.now(timezone.utc)
     todas, log = [], []
     for nome, cor, urls, site in FONTES:
+        capa = []
+        try:
+            capa = destaques(nome, site)
+            log.append(f"{nome}: {len(capa)} destaques na capa")
+        except Exception as e:
+            log.append(f"{nome}: capa falhou ({type(e).__name__})")
         itens = []
         for u in urls:
             try:
@@ -81,10 +133,29 @@ def main():
                 log.append(f"{nome}: usando Google Notícias")
             except Exception as e:
                 log.append(f"{nome}: sem notícias ({type(e).__name__})")
-        vistos, sel = set(), []
-        recentes = [i for i in itens if not i["data"] or agora - datetime.fromisoformat(i["data"]) < timedelta(hours=36)]
+        # completa os destaques da capa com resumo/horário do RSS (mesmo link ou mesmo título)
+        por_link = {i["link"].split("?")[0]: i for i in itens}
+        por_tit = {i["titulo"].lower()[:50]: i for i in itens}
+        for c in capa:
+            r = por_link.get(c["link"].split("?")[0]) or por_tit.get(c["titulo"].lower()[:50])
+            if r:
+                c["resumo"] = r["resumo"] or c["resumo"]; c["data"] = r["data"]
+        def fresco(i, horas):
+            if i["data"]:
+                return agora - datetime.fromisoformat(i["data"]) < timedelta(hours=horas)
+            m = re.search(r"/(20\d\d)/(\d\d)/(\d\d)/", i["link"])  # data no endereço da matéria
+            if m:
+                try: return agora.date() - datetime(*map(int, m.groups())).date() <= timedelta(days=1)
+                except ValueError: pass
+            m = re.search(r"/(20\d\d)/(\d\d)/", i["link"])
+            if m and (int(m.group(1)), int(m.group(2))) < (agora.year, agora.month) and agora.day > 2:
+                return False
+            return True
+        # 1º: destaques da capa (na ordem do site); 2º: as mais recentes do RSS
+        recentes = [i for i in itens if fresco(i, 12)] or [i for i in itens if fresco(i, 36)]
         recentes.sort(key=lambda i: i["data"] or "", reverse=True)
-        for i in recentes:
+        vistos, sel = set(), []
+        for i in [c for c in capa if fresco(c, 12)] + recentes:
             k = i["titulo"].lower()[:60]
             if k in vistos: continue
             vistos.add(k); i["cor"] = cor; sel.append(i)

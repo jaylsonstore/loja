@@ -2,7 +2,7 @@ name: Atualizar notícias da vitrine
 
 on:
   schedule:
-    - cron: "7 * * * *"   # a cada hora
+    - cron: "7,37 * * * *"   # a cada 30 min
   workflow_dispatch:
   push:
     paths:
