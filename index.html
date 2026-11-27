@@ -2539,7 +2539,7 @@ function renderVitrine(cat){
   vtProximo(1);
 }
 /* ---- Auto-atualização: se publicar versão nova, o tablet recarrega sozinho ---- */
-const APP_VER="2026-11-26d";
+const APP_VER="2026-11-27a";
 async function vtChecaVersao(){
   try{ const r=await fetch(location.pathname+"?v="+Date.now(),{cache:"no-store"}); if(!r.ok) return;
     const m=(await r.text()).match(/APP_VER="([^"]+)"/); if(m && m[1]!==APP_VER) location.reload(); }catch(e){}
@@ -2572,7 +2572,7 @@ function vtNoticia(){
 function vtProximo(dir){
   if(!VT) return; ntCarregar();
   if(VT.emNoticia){ VT.emNoticia=false; if(dir<0) dir=0; }
-  else if(dir>0 && (VT.desde||0)>=4 && NT.itens.length){ vtNoticia(); return; }
+  else if(dir>0 && (VT.desde||0)>=1 && NT.itens.length){ vtNoticia(); return; }
   VT.lista=vtLista();
   const st=$("#vtStage");
   if(!VT.lista.length){ st.innerHTML=`<div class="vt-vazio">Nenhum produto para mostrar${VT.cat?` em “${esc(VT.cat)}”`:""}.<br><small>Marque produtos como “Mostrar no site” no painel.</small></div>`; $("#vtCont").textContent=""; clearTimeout(VT.timer); VT.timer=setTimeout(()=>vtProximo(1),30000); return; }
