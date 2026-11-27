@@ -1,5 +1,5 @@
 {
- "atualizado": "2026-11-27T15:38:19.700622+00:00",
+ "atualizado": "2026-11-27T15:42:58.204300+00:00",
  "itens": [
   {
    "fonte": "g1",
@@ -50,6 +50,30 @@
    "cor": "#06aa48"
   },
   {
+   "fonte": "O São Gonçalo",
+   "titulo": "Apoiadores se reúnem no Caminho Niemeyer para receber Lula durante visita a Niterói",
+   "resumo": "Apoiadores se reuniram na Praça do Povo, no Caminho Niemeyer, na manhã desta sexta-feira (27), para aguardar a chegada de Lula a Niterói. O Presidente visita Niterói…",
+   "link": "https://www.osaogoncalo.com.br/geral/180635/apoiadores-se-reunem-no-caminho-niemeyer-para-receber-lula-durante-visita-a-niteroi",
+   "data": "2026-11-27T12:09:58-03:00",
+   "cor": "#0b4f9c"
+  },
+  {
+   "fonte": "O Fluminense",
+   "titulo": "O Fluminense_Edição de Terça-feira 24 de novembro de 2026",
+   "resumo": "",
+   "link": "https://ofluminense.com.br/edicoes_do_jornal/o-fluminense_edicao-de-terca-feira-24-de-novembro-de-2026/",
+   "data": null,
+   "cor": "#1b3f8b"
+  },
+  {
+   "fonte": "Jovem Pan",
+   "titulo": "Camilo Santana chega à Casa Civil após ganhar força na disputa pela sucessão de Lula",
+   "resumo": "",
+   "link": "https://jovempan.com.br/politica/camilo-santana-chega-a-casa-civil-apos-ganhar-forca-na-disputa-pela-sucessao-de-lula/",
+   "data": null,
+   "cor": "#d71920"
+  },
+  {
    "fonte": "g1",
    "titulo": "Esquerda e direita se unem em elogios e críticas à indicação de Trabuco",
    "resumo": "Quem é Luiz Trabuco, escolhido como ministro da Fazenda do governo Lula 4 A escolha de Luiz Carlos Trabuco para o Ministério da Fazenda no quarto mandato do presidente…",
@@ -96,6 +120,30 @@
    "link": "https://ge.globo.com/futebol/futebol-internacional/noticia/2026/11/27/entenda-por-que-o-estudiantes-nao-e-considerado-um-dos-clubes-grandes-da-argentina.ghtml",
    "data": "2026-11-27T12:24:07+00:00",
    "cor": "#06aa48"
+  },
+  {
+   "fonte": "O São Gonçalo",
+   "titulo": "Policial militar de folga é morto a tiros no bairro Areal, em Itaboraí",
+   "resumo": "Um policial militar foi morto a tiros na noite de quinta-feira (26), no bairro Areal, em Itaboraí, na Região Metropolitana do Rio. O agente estava de folga quando foi…",
+   "link": "https://www.osaogoncalo.com.br/seguranca-publica/180631/policial-militar-de-folga-e-morto-a-tiros-no-bairro-areal-em-itaborai",
+   "data": "2026-11-27T11:00:45-03:00",
+   "cor": "#0b4f9c"
+  },
+  {
+   "fonte": "O Fluminense",
+   "titulo": "O Fluminense_Edição de Sexta-feira 20 a segunda-feira 23 de novembro de 2026",
+   "resumo": "",
+   "link": "https://ofluminense.com.br/edicoes_do_jornal/o-fluminense_edicao-de-sexta-feira-20-a-segunda-feira-23-de-novembro-de-2026/",
+   "data": null,
+   "cor": "#1b3f8b"
+  },
+  {
+   "fonte": "Jovem Pan",
+   "titulo": "Após definir Fazenda, Lula decide que Camilo Santana assumirá Casa Civil",
+   "resumo": "",
+   "link": "https://jovempan.com.br/politica/apos-definir-fazenda-lula-decide-que-camilo-santana-assumira-casa-civil/",
+   "data": null,
+   "cor": "#d71920"
   },
   {
    "fonte": "g1",
@@ -146,6 +194,30 @@
    "cor": "#06aa48"
   },
   {
+   "fonte": "O São Gonçalo",
+   "titulo": "Preso por suspeita de tráfico de drogas na Comunidade da Galinha, em Niterói",
+   "resumo": "Um homem de 26 anos foi preso por suspeita de tráfico de drogas durante uma ação da Polícia Militar na Comunidade da Galinha, em Niterói, na noite dessa quinta-feira…",
+   "link": "https://www.osaogoncalo.com.br/seguranca-publica/180634/preso-por-suspeita-de-trafico-de-drogas-na-comunidade-da-galinha-em-niteroi",
+   "data": "2026-11-27T12:05:03-03:00",
+   "cor": "#0b4f9c"
+  },
+  {
+   "fonte": "O Fluminense",
+   "titulo": "O Fluminense_Edição de Quinta-feira 19 de novembro de 2026",
+   "resumo": "",
+   "link": "https://ofluminense.com.br/edicoes_do_jornal/o-fluminense_edicao-de-quinta-feira-19-de-novembro-de-2026/",
+   "data": null,
+   "cor": "#1b3f8b"
+  },
+  {
+   "fonte": "Jovem Pan",
+   "titulo": "Trabuco aceita convite de Lula e será o próximo ministro da Fazenda",
+   "resumo": "",
+   "link": "https://jovempan.com.br/politica/trabuco-aceita-convite-de-lula-e-deve-ser-o-proximo-ministro-da-fazenda/",
+   "data": null,
+   "cor": "#d71920"
+  },
+  {
    "fonte": "g1",
    "titulo": "CAMAROTTI: Grupo de Haddad deve ficar fora do Lula 4",
    "resumo": "",
@@ -192,6 +264,30 @@
    "link": "https://ge.globo.com/futebol/futebol-internacional/noticia/2026/11/27/boca-juniors-divulga-video-em-3d-de-reforma-em-la-bombonera-veja.ghtml",
    "data": "2026-11-27T11:01:43+00:00",
    "cor": "#06aa48"
+  },
+  {
+   "fonte": "O São Gonçalo",
+   "titulo": "Disque Denúncia Mulher e Programa Procurados lançam selo para ampliar identificação de foragidos por crimes contra mulheres",
+   "resumo": "Como parte das ações dos 21 Dias de Ativismo pelo Fim da Violência contra as Mulheres, o Programa Disque Denúncia Mulher (DD Mulher), em parceria com o Programa…",
+   "link": "https://www.osaogoncalo.com.br/seguranca-publica/180633/disque-denuncia-mulher-e-programa-procurados-lancam-selo-para-ampliar-identificacao-de-foragidos-por-crimes-contra-mulheres",
+   "data": "2026-11-27T11:31:39-03:00",
+   "cor": "#0b4f9c"
+  },
+  {
+   "fonte": "O Fluminense",
+   "titulo": "O Fluminense_Edição de Quarta-feira 18 de novembro de 2026",
+   "resumo": "",
+   "link": "https://ofluminense.com.br/edicoes_do_jornal/o-fluminense_edicao-de-quarta-feira-18-de-novembro-de-2026/",
+   "data": null,
+   "cor": "#1b3f8b"
+  },
+  {
+   "fonte": "Jovem Pan",
+   "titulo": "Carreira no Bradesco e próximo de Lula: quem é Luiz Trabuco",
+   "resumo": "",
+   "link": "https://jovempan.com.br/economia/carreira-no-bradesco-e-proximo-de-lula-quem-e-luiz-trabuco-cotado-para-assumir-a-fazenda/",
+   "data": null,
+   "cor": "#d71920"
   },
   {
    "fonte": "g1",
@@ -242,6 +338,30 @@
    "cor": "#06aa48"
   },
   {
+   "fonte": "O São Gonçalo",
+   "titulo": "Grupo teatral de São Gonçalo conquista nove prêmios nacionais e leva o nome da cidade pelo Brasil",
+   "resumo": "O teatro de São Gonçalo vem conquistando cada vez mais espaço no cenário artístico nacional. Durante o mês de novembro, o Coletivo CAGE, referência na formação de atores…",
+   "link": "https://www.osaogoncalo.com.br/sao-goncalo/180632/grupo-teatral-de-sao-goncalo-conquista-nove-premios-nacionais-e-leva-o-nome-da-cidade-pelo-brasil",
+   "data": "2026-11-27T11:25:57-03:00",
+   "cor": "#0b4f9c"
+  },
+  {
+   "fonte": "O Fluminense",
+   "titulo": "O Fluminense_Edição de Terça-feira 17 de novembro de 2026",
+   "resumo": "",
+   "link": "https://ofluminense.com.br/edicoes_do_jornal/o-fluminense_edicao-de-terca-feira-17-de-novembro-de-2026/",
+   "data": null,
+   "cor": "#1b3f8b"
+  },
+  {
+   "fonte": "Jovem Pan",
+   "titulo": "Ajuste fiscal, juros e resistência no PT: os desafios de Trabuco no Lula 4",
+   "resumo": "",
+   "link": "https://jovempan.com.br/economia/ajuste-fiscal-juros-e-resistencia-no-pt-os-desafios-de-trabuco-no-lula-4/",
+   "data": null,
+   "cor": "#d71920"
+  },
+  {
    "fonte": "g1",
    "titulo": "O que outros banqueiros fizeram enquanto estiveram à frente da Fazenda",
    "resumo": "",
@@ -288,6 +408,30 @@
    "link": "https://ge.globo.com/motor/formula-1/noticia/2026/11/27/gp-do-catar-antonelli-lidera-1o-treino-bortoleto-e-11o-e-camara-fica-em-15o.ghtml",
    "data": "2026-11-27T14:31:42+00:00",
    "cor": "#06aa48"
+  },
+  {
+   "fonte": "O São Gonçalo",
+   "titulo": "Taxa de desemprego fica em 5,1% no trimestre encerrado em outubro",
+   "resumo": "A taxa de desocupação, também chamada de taxa de desemprego, ficou em 5,1% no trimestre encerrado em outubro deste ano. O dado, da Pesquisa Nacional por Amostra de…",
+   "link": "https://www.osaogoncalo.com.br/geral/180630/taxa-de-desemprego-fica-em-51-no-trimestre-encerrado-em-outubro",
+   "data": "2026-11-27T10:24:25-03:00",
+   "cor": "#0b4f9c"
+  },
+  {
+   "fonte": "O Fluminense",
+   "titulo": "O Fluminense_Edição de Sábado 14 de a segunda-feira 16 de novembro de 2026",
+   "resumo": "",
+   "link": "https://ofluminense.com.br/edicoes_do_jornal/o-fluminense_edicao-de-sabado-14-de-a-segunda-feira-16-de-novembro-de-2026/",
+   "data": null,
+   "cor": "#1b3f8b"
+  },
+  {
+   "fonte": "Jovem Pan",
+   "titulo": "Bradesco comunica a acionistas sobre ida de Trabuco ao Ministério da Fazenda",
+   "resumo": "",
+   "link": "https://jovempan.com.br/politica/bradesco-comunica-a-acionistas-sobre-ida-de-trabuco-ao-ministerio-da-fazenda/",
+   "data": null,
+   "cor": "#d71920"
   }
  ]
 }
