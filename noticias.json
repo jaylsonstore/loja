@@ -1,12 +1,60 @@
 {
- "atualizado": "2026-11-27T08:33:02.520906+00:00",
+ "atualizado": "2026-11-27T10:12:35.746637+00:00",
  "itens": [
   {
    "fonte": "g1",
-   "titulo": "Navio de cruzeiro 'invade' trânsito em Santos em ilusão de ótica; VÍDEO",
-   "resumo": "Navio de cruzeiro parece 'invadir' trânsito em Santos Um vídeo mostra um navio de cruzeiro chegando ao Porto de Santos, no litoral de São Paulo. O ângulo em que as…",
-   "link": "https://g1.globo.com/sp/santos-regiao/porto-mar/noticia/2026/11/27/navio-de-cruzeiro-invade-transito-em-santos-em-ilusao-de-otica-video.ghtml",
-   "data": "2026-11-27T08:25:56+00:00",
+   "titulo": "Morre Juary, ex-Santos e campeão da Champions que virou motorista de app",
+   "resumo": "Ex-jogador do Santos FC, Juary Jorge dos Santos Filho, de 67 anos, vira motorista de aplicativo Reprodução/Instagram O ex-jogador de futebol Juary Jorge dos Santos…",
+   "link": "https://g1.globo.com/sp/santos-regiao/noticia/2026/11/27/morre-juary-ex-santos-e-campeao-da-champions-que-virou-motorista-de-app.ghtml",
+   "data": "2026-11-27T10:00:54+00:00",
+   "cor": "#c4170c"
+  },
+  {
+   "fonte": "Estadão",
+   "titulo": "O desafio de Trabuco à frente do Ministério da Fazenda, segundo economistas",
+   "resumo": "",
+   "link": "https://www.estadao.com.br/economia/o-desafio-de-trabuco-a-frente-do-ministerio-da-fazenda-segundo-economistas/",
+   "data": "2026-11-27T08:30:00+00:00",
+   "cor": "#1d3f6e"
+  },
+  {
+   "fonte": "Folha",
+   "titulo": "Deputado do PT pede ao STF bloqueio de R$ 79,3 milhões em emendas de Flávio Bolsonaro",
+   "resumo": "O deputado federal Alencar Santana ( PT -SP) pediu ao ministro Flávio Dino , do STF (Supremo Tribunal Federal), o bloqueio de R$ 79,3 milhões em emendas individuais…",
+   "link": "https://redir.folha.com.br/redir/online/emcimadahora/rss091/*https://www1.folha.uol.com.br/colunas/monicabergamo/2026/11/deputado-do-pt-pede-ao-stf-bloqueio-de-r-793-milhoes-em-emendas-de-flavio-bolsonaro.shtml",
+   "data": "2026-11-27T07:00:00-03:00",
+   "cor": "#00618a"
+  },
+  {
+   "fonte": "TechTudo",
+   "titulo": "Air Fryer na Black Friday: 8 opções do baratinho ao top de linha",
+   "resumo": "A Black Friday é uma oportunidade para quem quer comprar uma Air Fryer com desconto. Porém, diante de tantas alternativas no mercado, é importante entender qual modelo…",
+   "link": "https://www.techtudo.com.br/listas/2026/11/air-fryer-na-black-friday-8-opcoes-do-baratinho-ao-top-de-linha-bf2026-edqualcomprarlb.ghtml",
+   "data": "2026-11-27T10:00:00+00:00",
+   "cor": "#0a4ea8"
+  },
+  {
+   "fonte": "Olhar Digital",
+   "titulo": "Resumo do OD: El Niño; Terra mais quente do que nunca; pegadinhas da Black Friday",
+   "resumo": "Quase sete em cada dez consumidores que costumam comprar na Black Friday já se sentiram enganados. E mais: o desafio do El Niño no Brasil O post Resumo do OD: El Niño…",
+   "link": "https://olhardigital.com.br/2026/11/27/pro/resumo-do-od-el-nino-terra-mais-quente-do-que-nunca-pegadinhas-da-black-friday/",
+   "data": "2026-11-27T09:05:18+00:00",
+   "cor": "#0d6efd"
+  },
+  {
+   "fonte": "ge",
+   "titulo": "Zagueiro e camisa 10, Mateus Henrique faz golaço e é eleito Craque do ge",
+   "resumo": "Craque do ge: Mateus Henrique O estudante e jogador de futebol Mateus Henrique Celestino, de 10 anos, foi eleito Craque do ge com 77% dos votos. Representante da…",
+   "link": "https://ge.globo.com/ms/noticia/2026/11/27/zagueiro-e-camisa-10-mateus-henrique-faz-golaco-e-e-eleito-craque-do-ge.ghtml",
+   "data": "2026-11-27T10:01:01+00:00",
+   "cor": "#06aa48"
+  },
+  {
+   "fonte": "g1",
+   "titulo": "Agente de saúde que encontrou menina de 3 anos desaparecida em mata é homenageado em MG",
+   "resumo": "Marcos Antônio Toledo com o Certificado de Honra ao Mérito em mãos Marcos Antônio Toledo/Arquivo Pessoal O agente comunitário de saúde Marcos Antônio Toledo, de 40 anos…",
+   "link": "https://g1.globo.com/mg/centro-oeste/noticia/2026/11/27/agente-de-saude-que-encontrou-menina-de-3-anos-desaparecida-em-mata-e-homenageado-em-mg.ghtml",
+   "data": "2026-11-27T10:00:00+00:00",
    "cor": "#c4170c"
   },
   {
@@ -19,10 +67,58 @@
   },
   {
    "fonte": "Folha",
-   "titulo": "São Paulo tem previsão de chuva fraca nesta sexta (27) e de temporal no sábado (28)",
-   "resumo": "As áreas do país com maior potencial de chuva nesta sexta-feira (27), segundo os institutos de meteorologia, ficam no Sudeste e no Sul, com instabilidades também no…",
-   "link": "https://redir.folha.com.br/redir/online/emcimadahora/rss091/*https://www1.folha.uol.com.br/cotidiano/2026/11/sao-paulo-tem-previsao-de-chuva-fraca-nesta-sexta-27-e-de-temporal-no-sabado-28.shtml",
-   "data": "2026-11-27T05:00:00-03:00",
+   "titulo": "Veja dicas do que não fazer com crianças no final de semana",
+   "resumo": "O que fazer com crianças em São Paulo ? Ou em qualquer grande cidade? Se você é mãe ou pai, tenho certeza de que já digitou isso em uma sexta-feira à noite no Google …",
+   "link": "https://redir.folha.com.br/redir/online/emcimadahora/rss091/*https://www1.folha.uol.com.br/blogs/maternar/2026/11/veja-dicas-do-que-nao-fazer-com-criancas-no-final-de-semana.shtml",
+   "data": "2026-11-27T07:00:00-03:00",
+   "cor": "#00618a"
+  },
+  {
+   "fonte": "TechTudo",
+   "titulo": "8 jogos clássicos de PS4 por até R$ 60 para comprar na Black Friday",
+   "resumo": "Para celebrar a Black Friday no Brasil, a PlayStation preparou ofertas em jogos em mídia física, hardware, periféricos e acessórios, com preços especiais entre 20 de…",
+   "link": "https://www.techtudo.com.br/listas/2026/11/8-jogos-classicos-de-ps4-por-ate-r-60-para-comprar-na-black-friday-bf2026-edqualcomprarjg.ghtml",
+   "data": "2026-11-27T09:00:00+00:00",
+   "cor": "#0a4ea8"
+  },
+  {
+   "fonte": "Olhar Digital",
+   "titulo": "Mistério no espaço: sistema estelar triplo encontrado por astrônomos “não deveria existir”",
+   "resumo": "A 28 anos-luz da Terra, sistema com três estrelas intriga cientistas por desafiar os modelos conhecidos de evolução estelar O post Mistério no espaço: sistema estelar…",
+   "link": "https://olhardigital.com.br/2026/11/27/ciencia-e-espaco/misterio-no-espaco-sistema-estelar-triplo-encontrado-por-astronomos-nao-deveria-existir/",
+   "data": "2026-11-27T09:00:00+00:00",
+   "cor": "#0d6efd"
+  },
+  {
+   "fonte": "ge",
+   "titulo": "Mourinho diz que elenco fez Vini Jr. evoluir na temporada: \"É a base dele\"",
+   "resumo": "Real Madrid 5 x 1 PSV Eindhoven | Melhores momentos | 5a Rodada | Liga dos campeões UEFA Depois de um começo de temporada irregular, Vini Jr. tem reencontrado o bom…",
+   "link": "https://ge.globo.com/futebol/futebol-internacional/noticia/2026/11/27/mourinho-diz-que-elenco-fez-vini-jr-evoluir-na-temporada-e-a-base-dele.ghtml",
+   "data": "2026-11-27T09:35:49+00:00",
+   "cor": "#06aa48"
+  },
+  {
+   "fonte": "g1",
+   "titulo": "Caio Luccas, Tiago Santineli, Diggo e TorresmoFest: veja o que curtir em Juiz de Fora e região no fim de semana",
+   "resumo": "O g1 lista algumas das atrações nas cidades da Zona da Mata e no Campo das Vertentes entre 27 e 29 de novembro g1 O g1 lista algumas das atrações nas cidades da Zona da…",
+   "link": "https://g1.globo.com/mg/zona-da-mata/noticia/2026/11/27/caio-luccas-tiago-santineli-diggo-e-torresmofest-veja-o-que-curtir-em-juiz-de-fora-e-regiao-no-fim-de-semana.ghtml",
+   "data": "2026-11-27T10:00:00+00:00",
+   "cor": "#c4170c"
+  },
+  {
+   "fonte": "Estadão",
+   "titulo": "Bonde São Paulo vai ligar polos de comércio e cultura no centro da capital",
+   "resumo": "",
+   "link": "https://www.estadao.com.br/economia/bonde-sao-paulo-vai-ligar-polos-de-comercio-e-cultura-no-centro-da-capital/",
+   "data": "2026-11-27T03:01:00+00:00",
+   "cor": "#1d3f6e"
+  },
+  {
+   "fonte": "Folha",
+   "titulo": "Sol é o planeta regente de 2027? Trânsitos indicam revisões, eclipses e mudanças coletivas",
+   "resumo": "Se você viu nas redes que 2027 será o \"Ano do Sol\", a resposta curta é: não exatamente. Na astrologia moderna, não existe um único planeta regente do ano. O que marca…",
+   "link": "https://redir.folha.com.br/redir/online/emcimadahora/rss091/*https://f5.folha.uol.com.br/astrologia/2026/11/sol-e-o-planeta-regente-de-2027-transitos-indicam-revisoes-eclipses-e-mudancas-coletivas.shtml",
+   "data": "2026-11-27T07:00:00-03:00",
    "cor": "#00618a"
   },
   {
@@ -43,34 +139,34 @@
   },
   {
    "fonte": "ge",
-   "titulo": "Um paredão de 2,04m",
-   "resumo": "",
-   "link": "https://news.google.com/rss/articles/CBMickFVX3lxTFBNRGJjUGh0R1NoVDJvb0hHLXJ1WXlvcGs1MktjNWRRT0Y0UjNEXzh5N2JIcmVnNjVqNXk5R0pfS183X1ZIMjJ5bUlGMmIwcV9mcFNxazRnUEYwcGVVZmxsLWZjOG9ySDF6bHB2RU81djNlZw?oc=5",
-   "data": "2026-11-27T07:03:51+00:00",
+   "titulo": "Zé Hugo celebra renovação com o Botafogo-SP: \"Carinho muito grande\"",
+   "resumo": "Botafogo-SP anuncia lateral-esquerdo Reverson O atacante Zé Hugo celebrou a continuidade no Botafogo-SP para a próxima temporada. O clube acertou a compra definitiva de…",
+   "link": "https://ge.globo.com/sp/ribeirao-preto-e-regiao/futebol/times/botafogo-sp/noticia/2026/11/27/ze-hugo-celebra-renovacao-com-o-botafogo-sp-carinho-muito-grande.ghtml",
+   "data": "2026-11-27T09:00:01+00:00",
    "cor": "#06aa48"
   },
   {
    "fonte": "g1",
-   "titulo": "Sequestradores fizeram chamada de vídeo e mostraram saldo bancário antes de matar comerciante",
-   "resumo": "Suspeito faz chamada de vídeo durante sequestro de comerciante no interior de SP Os suspeitos de sequestrar e matar o comerciante Gercino Batista, de 75 anos, fizeram…",
-   "link": "https://g1.globo.com/sp/santos-regiao/noticia/2026/11/27/sequestradores-fizeram-chamada-de-video-e-mostraram-saldo-bancario-antes-de-matar-comerciante.ghtml",
-   "data": "2026-11-27T08:25:02+00:00",
+   "titulo": "Homem é encontrado morto em avenida de Teresina",
+   "resumo": "Instituto de Medicina Legal (IML) no Piauí Aric Lages Um homem que ainda não teve a identidade revelada foi encontrado morto no início da manhã desta sexta-feira (27) em…",
+   "link": "https://g1.globo.com/pi/piaui/noticia/2026/11/27/homem-morto-teresina.ghtml",
+   "data": "2026-11-27T09:53:44+00:00",
    "cor": "#c4170c"
   },
   {
    "fonte": "Estadão",
-   "titulo": "Bonde São Paulo vai ligar polos de comércio e cultura no centro da capital",
+   "titulo": "‘Argentina para brasileiros’: quais as razões do fracasso de um país que tinha tudo para brilhar?",
    "resumo": "",
-   "link": "https://www.estadao.com.br/economia/bonde-sao-paulo-vai-ligar-polos-de-comercio-e-cultura-no-centro-da-capital/",
-   "data": "2026-11-27T03:01:00+00:00",
+   "link": "https://www.estadao.com.br/economia/fabio-giambiagi/argentina-para-brasileiros-quais-as-razoes-do-fracasso-de-um-pais-que-tinha-tudo-para-brilhar/",
+   "data": "2026-11-27T01:00:00+00:00",
    "cor": "#1d3f6e"
   },
   {
    "fonte": "Folha",
-   "titulo": "Cotado para Ministério da Segurança, Alckmin viu PCC se expandir e violência policial bater recorde em SP",
-   "resumo": "Cotado para assumir o Ministério da Segurança Pública , o vice-presidente Geraldo Alckmin ( PSB ) governou o estado de São Paulo num período em que a facção criminosa…",
-   "link": "https://redir.folha.com.br/redir/online/emcimadahora/rss091/*https://www1.folha.uol.com.br/cotidiano/2026/11/cotado-para-ministerio-da-seguranca-alckmin-viu-pcc-se-expandir-e-violencia-policial-bater-recorde-em-sp.shtml",
-   "data": "2026-11-27T04:15:00-03:00",
+   "titulo": "Bradesco diz que sucessão de Trabuco na presidência do conselho seguirá regulamentação",
+   "resumo": "O Bradesco confirmou nesta sexta-feira (27) que Luiz Carlos Trabuco aceitou o convite do presidente Luiz Inácio Lula da Silva (PT) para ser ministro da Fazenda em 2027…",
+   "link": "https://redir.folha.com.br/redir/online/emcimadahora/rss091/*https://www1.folha.uol.com.br/mercado/2026/11/bradesco-diz-que-sucessao-de-trabuco-na-presidencia-do-conselho-seguira-regulamentacao.shtml",
+   "data": "2026-11-27T06:55:00-03:00",
    "cor": "#00618a"
   },
   {
@@ -91,34 +187,34 @@
   },
   {
    "fonte": "ge",
-   "titulo": "Marcos Leonardo volta a ser titular e brilha em goleada do Ajax com três participações diretas",
-   "resumo": "",
-   "link": "https://news.google.com/rss/articles/CBMi_wFBVV95cUxQREdkUGo5MkhyVWIxc3lSVDlnSDlTVlYtT3F1Yy1TVTRqQUcwcUZmZVJ6SnU5X2xxNkl6QVZ2SWVCd2FlRjBDRDJ5OUxHdk9ZZGl0TlkzNUJPOHVHakFqUWJqTkJpMUEwdFlJeW9MZ2huYlJvUU9rZkwwZDFWejBCR2h2X0tIcGh6ZFJSV0FwMmtVV2s5Q1pZbVZJYTV5QUhwV2RETHdvYVpZNGZKdkROUXNvVW9Ea0NUOGxoQ09XWkUxb3cwOHUydjMyeWRJdjMyMW4wbXlXZURtaGt1VTQ2eGZ6SHdDb0pEcVNCenFlWU9TVmhpVElKQ0hRYmlieDTSAY4CQVVfeXFMT0p3Y0g3allYeWRhMVJMa201OG15VElPdWNncGVZZ2Q5T2hicDlfMjlPQWJEUGQ4NU10TE5LT3h5S2dBVUlwN0d1QmhDY3JWLXN6WXBkeVpMRUZLUVFCNEpFZU1PbkNvWm5adlZWTzZiWEVyZ3hBeE1SaXhQdmlFMXVqSks0UE9KYTd6eHBQYmx0c2t3RjBMS0ppNUxoWjl5aUp0QWE5ODM3dng1WGNWbng4OUlyazRpZVU4ckNVQzJvM2pETXpTS0Y1V1BzUGZnU0xEZS1qakRKSGhjY09wMFdPUVdTbENPMkpISUdBdjFuNFhwZ3VyU2ZpVGlicVV1Q3U1M3FjWEdaZExVcFZB?oc=5",
-   "data": "2026-11-27T05:00:00+00:00",
+   "titulo": "Hamilton minimiza crise com Leclerc na Ferrari: \"Temos um ótimo relacionamento\"",
+   "resumo": "Norris opina sobre rixa entre Verstappen e Russell na F1 2026 Os sucessivos conflitos entre Lewis Hamilton e Charles Leclerc dão a impressão de que a Ferrari atravessa…",
+   "link": "https://ge.globo.com/motor/formula-1/noticia/2026/11/27/hamilton-minimiza-crise-com-leclerc-na-ferrari-temos-um-otimo-relacionamento.ghtml",
+   "data": "2026-11-27T09:00:00+00:00",
    "cor": "#06aa48"
   },
   {
    "fonte": "g1",
-   "titulo": "Influencer Luara Fonseca relata erro em diagnóstico de bipolaridade e revela tratamento para TPOC",
-   "resumo": "Influenciadora Luara Fonseca revela diagnóstico de TPOC A influenciadora Luara Fonseca, de 21 anos, revelou que o diagnóstico de transtorno bipolar, divulgado nas redes…",
-   "link": "https://g1.globo.com/sp/santos-regiao/mais-saude/noticia/2026/11/27/influencer-luara-fonseca-relata-erro-em-diagnostico-de-bipolaridade-e-revela-tratamento-para-tpoc.ghtml",
-   "data": "2026-11-27T08:24:05+00:00",
+   "titulo": "Polícia prende 'Capitão Léo', suspeito de homicídios em guerra por territórios entre milícia e tráfico em Vargem Grande",
+   "resumo": "A Delegacia de Homicídios da Capital prendeu um PM apontado como chefe de milícia na comunidade Pombo Sem Asa, em Vargem Grande, na Zona Sudoeste do Rio. Segundo as…",
+   "link": "https://g1.globo.com/rj/rio-de-janeiro/noticia/2026/11/27/policia-prende-pm-milicia-trafico-vargem-grande.ghtml",
+   "data": "2026-11-27T09:50:49+00:00",
    "cor": "#c4170c"
   },
   {
    "fonte": "Estadão",
-   "titulo": "‘Argentina para brasileiros’: quais as razões do fracasso de um país que tinha tudo para brilhar?",
+   "titulo": "‘Efeito Trabuco’ devolve R$ 90 bi em valor de mercado a bancos",
    "resumo": "",
-   "link": "https://www.estadao.com.br/economia/fabio-giambiagi/argentina-para-brasileiros-quais-as-razoes-do-fracasso-de-um-pais-que-tinha-tudo-para-brilhar/",
+   "link": "https://www.estadao.com.br/economia/coluna-da-broad/efeito-trabuco-devolve-r-90-bi-em-valor-de-mercado-a-bancos/",
    "data": "2026-11-27T01:00:00+00:00",
    "cor": "#1d3f6e"
   },
   {
    "fonte": "Folha",
-   "titulo": "Governo Tarcísio corre para pagar emendas após insatisfação da base na Assembleia",
-   "resumo": "O governo Tarcísio de Freitas (Republicanos) corre para destravar o pagamento de emendas parlamentares após um represamento milionário a um mês do fim do ano, o que…",
-   "link": "https://redir.folha.com.br/redir/online/emcimadahora/rss091/*https://www1.folha.uol.com.br/poder/2026/11/governo-tarcisio-corre-para-pagar-emendas-apos-insatisfacao-da-base-na-assembleia.shtml",
-   "data": "2026-11-27T04:06:00-03:00",
+   "titulo": "Inteligência artificial empurrou matemática para crise existencial",
+   "resumo": "A matemática está passando por uma crise existencial. Leia mais (11/27/2026 - 06h00)",
+   "link": "https://redir.folha.com.br/redir/online/emcimadahora/rss091/*https://www1.folha.uol.com.br/ciencia/2026/11/inteligencia-artificial-empurrou-matematica-para-crise-existencial.shtml",
+   "data": "2026-11-27T06:00:00-03:00",
    "cor": "#00618a"
   },
   {
@@ -139,106 +235,10 @@
   },
   {
    "fonte": "ge",
-   "titulo": "ATP Challenger terá duelo brasileiro nas quartas de final em Florianópolis",
-   "resumo": "",
-   "link": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxObHFibExCdTRCWERxVzdnR1psdWNRVDZieEhJR0JMN24yMTJWSXk4MjZpdFgtLWkzRE9GLVZxNzhZOEhfTTRHc09ZbmZMeWRPZ3BacW1ZaWM4dTNMb0tWZHBRM2txYzVkNm9JVVFQb2RXVFJpR3ZiaFF5VmlmdXptOTNfY3dJVkJBUHFQTkNVemNrZ2VtY2p3WGtGYjJXbEdUbGk0ajJoX0xIN0dRM2JfdGIxYXhXMmc3S3Mycm1CdHNSWVg5TnVTRtIB1wFBVV95cUxOei1SOVJXUkpnb2R4Ymg4MnZPeVZIOWFZb19iUGdYcDNyams2SFM5V0s2dlZQbS1UN3hrMThDakRzSjNWNDRCY1VGbnFmRDBBd2lnX21qcTByWlRDd2tFVFFwWU5KR1J5cmRnRzQwcmhQN2dBWkpiMDBoRjI5aHpGcXY3aEoxR3FRMUlPajZNVEJKbjVjVDh4cloxWjhMYzU5NWl3Znp1TGwtT2VOOUE1d2VTc2lWS1owcmFaU1d3SXRDTHkxMDFOM3l6N0VjV2R4RU9FUDJYWQ?oc=5",
-   "data": "2026-11-27T03:01:47+00:00",
-   "cor": "#06aa48"
-  },
-  {
-   "fonte": "g1",
-   "titulo": "‘Tirei um peso das costas’, diz vítima de pastor condenado por estupro de vulnerável no RJ",
-   "resumo": "Jorge Luiz Oliveira dos Santos, de 49 anos, foi condenado a mais de 67 anos de prisão Reprodução “Tirei um peso das costas\", disse uma das vítimas do pastor Jorge Luiz…",
-   "link": "https://g1.globo.com/rj/rio-de-janeiro/noticia/2026/11/27/vitimas-pastor-condenado-por-estupro-de-vulneravel-no-rj.ghtml",
-   "data": "2026-11-27T08:00:02+00:00",
-   "cor": "#c4170c"
-  },
-  {
-   "fonte": "Estadão",
-   "titulo": "‘Efeito Trabuco’ devolve R$ 90 bi em valor de mercado a bancos",
-   "resumo": "",
-   "link": "https://www.estadao.com.br/economia/coluna-da-broad/efeito-trabuco-devolve-r-90-bi-em-valor-de-mercado-a-bancos/",
-   "data": "2026-11-27T01:00:00+00:00",
-   "cor": "#1d3f6e"
-  },
-  {
-   "fonte": "Folha",
-   "titulo": "Gleisi Hoffmann é cotada para voltar a ter cargo no Planalto após eleição de sacrifício no Paraná",
-   "resumo": "A deputada federal e ex-ministra Gleisi Hoffmann ( PT ) é cotada para assumir um cargo de primeiro escalão no Palácio do Planalto, próximo do presidente Luiz Inácio Lula…",
-   "link": "https://redir.folha.com.br/redir/online/emcimadahora/rss091/*https://www1.folha.uol.com.br/poder/2026/11/gleisi-hoffmann-e-cotada-para-voltar-a-ter-cargo-no-planalto-apos-eleicao-de-sacrificio-no-parana.shtml",
-   "data": "2026-11-27T04:03:00-03:00",
-   "cor": "#00618a"
-  },
-  {
-   "fonte": "TechTudo",
-   "titulo": "5 melhores marcas de TV para comprar na Black Friday",
-   "resumo": "Samsung, LG, TCL, Hisense e Philips possuem catálogos com modelos de TV LED, QLED, Mini LED e OLED, que apresentam diferenças na qualidade de imagem e no desempenho e…",
-   "link": "https://www.techtudo.com.br/listas/2026/11/5-melhores-marcas-de-tv-para-comprar-na-black-friday-bf2026-edinfoeletro.ghtml",
-   "data": "2026-11-27T06:00:00+00:00",
-   "cor": "#0a4ea8"
-  },
-  {
-   "fonte": "Olhar Digital",
-   "titulo": "Quer saber se satélites fotografaram sua casa? Este site permite descobrir",
-   "resumo": "Ferramenta, chamada Watched.Earth, reúne informações sobre satélites que sobrevoaram qualquer endereço nos últimos sete dias e oferece imagens da região capturadas…",
-   "link": "https://olhardigital.com.br/2026/11/26/ciencia-e-espaco/quer-saber-se-satelites-fotografaram-sua-casa-este-site-permite-descobrir/",
-   "data": "2026-11-27T01:53:12+00:00",
-   "cor": "#0d6efd"
-  },
-  {
-   "fonte": "ge",
-   "titulo": "Corrida da Longevidade estreia em Manaus neste domingo com provas de 5 km e 10 km",
-   "resumo": "",
-   "link": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNMVpXbTZFZnBpZ1F5dXJaYTR1OGE0bVJadnd6M29ibXNOOERWcTVhU3NXUHpZQzZ0ZHRhcm14ZDh3Yzh5UFdUUTB2MVhyNGl2ZXBpZzNsZWFXc09xRXAyUHkzN1Vnckx2MzZUdTVFMWRHVjRfNzBBVlprVU1OaVdpaHVTblNtNnlyVWpzV282UEpoS2FjTWdIYmtPbk9BelpXRVlPdUJXZ0hRd2RRbzB6WkhKUFBlS2RjczBkOTdaa2FVTS1DS3VzSlRn0gHYAUFVX3lxTE8wTThocW1Qbmx2UWRWR2FiLVRfUHZTcHFDN3NnYlJqNFRZWVd3QkFCZENYcnAyNHNUWlhsYjRBdlZwaDQ2OUdGak4ydXp2enVGOUhScTU3VkhxYV9KQTB5SzREM0VrYUpoUjlqTmVmeTg1UjB1R1ZLcjdxRzNpVlZUZGFOTmh3ZzJUZGNnc2ViWW5yZEI0MjJoRVN0cWZyd0hHUU9STWNNX0RiWVhPQl9naTFZWDZZTzU4Rm1Od0Itb0pyM0NxLWZ3UVI4aTRySmZMMS1LNjU5SA?oc=5",
-   "data": "2026-11-27T02:44:16+00:00",
-   "cor": "#06aa48"
-  },
-  {
-   "fonte": "g1",
-   "titulo": "Prefeitura do Ceará sugere devolver em até 100 parcelas R$ 410 mil em impostos pagos por engano por contribuintes de cidade do Paraná",
-   "resumo": "Prefeitura de Toledo Divulgação/Prefeitura A Prefeitura de Itaiçaba, no Ceará, sugeriu devolver em até 100 parcelas os R$ 410 mil em impostos que foram parar por engano…",
-   "link": "https://g1.globo.com/pr/oeste-sudoeste/noticia/2026/11/27/devolucao-dinheiro-toledo-ceara.ghtml",
-   "data": "2026-11-27T08:00:02+00:00",
-   "cor": "#c4170c"
-  },
-  {
-   "fonte": "Estadão",
-   "titulo": "No Palácio Tangará, 5x2 baixou rotatividade dos funcionários em 20%",
-   "resumo": "",
-   "link": "https://www.estadao.com.br/economia/coluna-da-broad/no-palacio-tangara-5x2-baixou-rotatividade-dos-funcionarios-em-20/",
-   "data": "2026-11-27T00:59:00+00:00",
-   "cor": "#1d3f6e"
-  },
-  {
-   "fonte": "Folha",
-   "titulo": "Celso de Mello critica caravanas de juízes a convite de empresas",
-   "resumo": "O ministro aposentado do Supremo Tribunal Federal Celso de Mello concorda com a tese de que juízes que viajam a convite de empresas privadas são suspeitos para julgar…",
-   "link": "https://redir.folha.com.br/redir/online/emcimadahora/rss091/*https://www1.folha.uol.com.br/blogs/frederico-vasconcelos/2026/11/celso-de-mello-critica-caravanas-de-juizes-a-convite-de-empresas.shtml",
-   "data": "2026-11-27T04:02:00-03:00",
-   "cor": "#00618a"
-  },
-  {
-   "fonte": "TechTudo",
-   "titulo": "6 TVs que você NÃO deve comprar na Black Friday",
-   "resumo": "TVs com resolução limitada, telas pequenas para sua sala, sistemas operacionais antigos, poucas conexões e recursos podem trazer frustração para os consumidores mesmo…",
-   "link": "https://www.techtudo.com.br/listas/2026/11/6-tvs-que-voce-nao-deve-comprar-na-black-friday-bf2026-edinfoeletro.ghtml",
-   "data": "2026-11-27T05:00:00+00:00",
-   "cor": "#0a4ea8"
-  },
-  {
-   "fonte": "Olhar Digital",
-   "titulo": "Homem encontra jeito inusitado de parar robotáxis da Waymo",
-   "resumo": "Homem ainda não identificado retira cones laranjas do porta-malas e os posiciona ao redor dos veículos autônomos para impedir que eles se movimentem O post Homem…",
-   "link": "https://olhardigital.com.br/2026/11/26/carros-e-tecnologia/homem-encontra-jeito-inusitado-de-parar-robotaxis-da-waymo/",
-   "data": "2026-11-27T01:30:24+00:00",
-   "cor": "#0d6efd"
-  },
-  {
-   "fonte": "ge",
-   "titulo": "Dorival Júnior e Rafinha anunciam saída do São Paulo no Brasileirão | Ge",
-   "resumo": "",
-   "link": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxPdDMwYmZCM0NLc05PTUpPbXh0QUNzclZQR181Z1lVSnBkWGE3RVBhZW9VLVlmX0NFVDZSVUczV0NfNDdLNzRrZ1ZSVDBWdlJhNlM4YktqTGliUGk0Q0JiUS1vM0RNV2lLbXJGdTlPVFAtOUtlQnBEc2RpalJCb3E3MDlDUUxiR3I5N3hGcWpBWGJNckVZMHhIaUVUY0dnX2dKWG16VFVFS0hlVG9VZ0ZZbWU5NkNzVG14bEZrREFJMFRqZXpzcmxWWG1xWXdwTDhyamc?oc=5",
-   "data": "2026-11-27T02:09:56+00:00",
+   "titulo": "Animado após vitória sobre o Cruzeiro, São José visita Sesi Bauru pela Superliga Masculina",
+   "resumo": "São José 3 X 2 Cruzeiro | Melhores momentos | 5ª rodada | Superliga Masculina de Vôlei O Vôlei São José entra em quadra nesta sexta-feira, 27, para enfrentar o Sesi…",
+   "link": "https://ge.globo.com/sp/vale-do-paraiba-regiao/volei/noticia/2026/11/27/animado-apos-vitoria-sobre-o-cruzeiro-sao-jose-visita-sesi-bauru-pela-superliga-masculina.ghtml",
+   "data": "2026-11-27T09:00:00+00:00",
    "cor": "#06aa48"
   }
  ]
