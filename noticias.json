@@ -1,11 +1,11 @@
 {
- "atualizado": "2026-11-27T14:35:35.306008+00:00",
+ "atualizado": "2026-11-27T15:38:19.700622+00:00",
  "itens": [
   {
    "fonte": "g1",
-   "titulo": "SADI: com Trabuco, Lula blinda a Fazenda e controla debate sucessório",
+   "titulo": "Compromisso fiscal 'cívico' e preservação de investimentos sociais: o que pensa o futuro ministro",
    "resumo": "",
-   "link": "https://g1.globo.com/politica/blog/andreia-sadi/post/2026/11/27/lula-escolha-trabuco-blinda-ministerio-fazenda.ghtml",
+   "link": "https://g1.globo.com/economia/noticia/2026/11/27/nova-reforma-da-previdencia-e-ajuste-fiscal-civico-conheca-as-posicoes-de-luiz-carlos-trabuco-futuro-ministro-da-fazenda.ghtml",
    "data": null,
    "cor": "#c4170c"
   },
@@ -19,9 +19,9 @@
   },
   {
    "fonte": "Folha",
-   "titulo": "Trump se deleita na farsa e se exibe na ponta de um iceberg",
+   "titulo": "É hora de trocar o indexador dos pisos de saúde e educação",
    "resumo": "",
-   "link": "https://www1.folha.uol.com.br/colunas/laura-greenhalgh/2026/11/trump-se-deleita-na-farsa-e-se-exibe-na-ponta-de-um-iceberg-chamado-nvidia.shtml",
+   "link": "https://www1.folha.uol.com.br/colunas/braulio-borges/2026/11/e-hora-de-trocar-o-indexador-dos-pisos-de-saude-e-educacao.shtml",
    "data": null,
    "cor": "#00618a"
   },
@@ -30,15 +30,63 @@
    "titulo": "Black Friday é hoje! Veja ofertas imperdíveis e ótimas promoções",
    "resumo": "",
    "link": "https://www.techtudo.com.br/ao-vivo/black-friday-ao-vivo-veja-melhores-promocoes-e-cupons-de-ofertas-exclusivos-bf2026-edqualcomprar.ghtml",
-   "data": "2026-11-27T13:08:50+00:00",
+   "data": "2026-11-27T15:20:44+00:00",
    "cor": "#0a4ea8"
   },
   {
    "fonte": "Olhar Digital",
-   "titulo": "Resumo do OD: El Niño; Terra mais quente do que nunca; pegadinhas da Black Friday",
+   "titulo": "BC prepara novas regras de segurança e melhorias no Pix em 2027",
+   "resumo": "As mudanças incluem critérios para bloqueios preventivos e uma ferramenta para facilitar a devolução de valores enviados por engano O post BC prepara novas regras de…",
+   "link": "https://olhardigital.com.br/2026/11/27/seguranca/bc-prepara-novas-regras-de-seguranca-e-melhorias-no-pix-em-2027/",
+   "data": "2026-11-27T15:04:02+00:00",
+   "cor": "#0d6efd"
+  },
+  {
+   "fonte": "ge",
+   "titulo": "Brasil amplia sobre a Costa Rica pelo Mundial sub-17; siga",
+   "resumo": "Mundial Sub-17 2026 no globoesporte.com - acompanhe tudo sobre Costa Rica x Brasil: escalação, informações sobre o jogo, fotos e muito mais",
+   "link": "https://ge.globo.com/ba/futebol/jogo/27-11-2026/costa-rica-brasil-mundial-sub-17.ghtml",
+   "data": "2026-11-27T15:30:44+00:00",
+   "cor": "#06aa48"
+  },
+  {
+   "fonte": "g1",
+   "titulo": "Esquerda e direita se unem em elogios e críticas à indicação de Trabuco",
+   "resumo": "Quem é Luiz Trabuco, escolhido como ministro da Fazenda do governo Lula 4 A escolha de Luiz Carlos Trabuco para o Ministério da Fazenda no quarto mandato do presidente…",
+   "link": "https://g1.globo.com/politica/noticia/2026/11/27/trabuco-no-ministerio-da-fazenda-repercussao-parlamentares.ghtml",
+   "data": "2026-11-27T14:25:41+00:00",
+   "cor": "#c4170c"
+  },
+  {
+   "fonte": "Estadão",
+   "titulo": "Silvio Cascione: Trabuco no Ministério Fazenda tem cenário muito mais favorável que Levy em 2015",
    "resumo": "",
-   "link": "https://olhardigital.com.br/2026/11/27/pro/resumo-do-od-el-nino-terra-mais-quente-do-que-nunca-pegadinhas-da-black-friday/",
+   "link": "https://www.estadao.com.br/politica/silvio-cascione/trabuco-na-fazenda-tem-cenario-muito-mais-favoravel-que-levy-em-2015/",
    "data": null,
+   "cor": "#1d3f6e"
+  },
+  {
+   "fonte": "Folha",
+   "titulo": "Trump se deleita na farsa e se exibe na ponta de um iceberg",
+   "resumo": "",
+   "link": "https://www1.folha.uol.com.br/colunas/laura-greenhalgh/2026/11/trump-se-deleita-na-farsa-e-se-exibe-na-ponta-de-um-iceberg-chamado-nvidia.shtml",
+   "data": null,
+   "cor": "#00618a"
+  },
+  {
+   "fonte": "TechTudo",
+   "titulo": "7 celulares com boas câmeras para comprar sem gastar muito",
+   "resumo": "Quer comprar um celular barato e com a câmera boa? Apesar de parecer uma missão difícil, a verdade é que esse tipo de aparelho está disponível no catálogo de marcas como…",
+   "link": "https://www.techtudo.com.br/listas/2026/11/celular-com-camera-boa-e-barato-edmobile.ghtml",
+   "data": "2026-11-27T10:48:20+00:00",
+   "cor": "#0a4ea8"
+  },
+  {
+   "fonte": "Olhar Digital",
+   "titulo": "PF faz operação em MG contra vazamento de senhas do governo",
+   "resumo": "Polícia Federal cumpre mandado em Coronel Fabriciano (MG) na Operação Revelatio contra vazamento de senhas de sistemas públicos O post PF faz operação em MG contra…",
+   "link": "https://olhardigital.com.br/2026/11/27/seguranca/pf-faz-operacao-em-mg-contra-vazamento-de-senhas-do-governo/",
+   "data": "2026-11-27T13:55:02+00:00",
    "cor": "#0d6efd"
   },
   {
@@ -51,17 +99,17 @@
   },
   {
    "fonte": "g1",
-   "titulo": "CAMAROTTI: Grupo de Haddad deve ficar fora do Lula 4",
+   "titulo": "SADI: com Trabuco, Lula blinda a Fazenda e controla debate sucessório",
    "resumo": "",
-   "link": "https://g1.globo.com/politica/blog/gerson-camarotti/post/2026/11/27/com-escolha-de-trabuco-grupo-de-haddad-deve-ficar-fora-do-lula-4.ghtml",
+   "link": "https://g1.globo.com/politica/blog/andreia-sadi/post/2026/11/27/lula-escolha-trabuco-blinda-ministerio-fazenda.ghtml",
    "data": null,
    "cor": "#c4170c"
   },
   {
    "fonte": "Estadão",
-   "titulo": "Cascione: Trabuco na Fazenda tem cenário muito mais favorável que Levy em 2015",
+   "titulo": "'Efeito Trabuco’: Ibovespa reduz alta, mas ainda sobe mais de 1%; dólar tomba a R$ 5,57",
    "resumo": "",
-   "link": "https://www.estadao.com.br/politica/silvio-cascione/trabuco-na-fazenda-tem-cenario-muito-mais-favoravel-que-levy-em-2015/",
+   "link": "https://www.estadao.com.br/einvestidor/cenarios-e-mercado/ibovespa-disparou-6-com-efeito-trabuco-e-agora-testa-o-folego-do-rali/",
    "data": null,
    "cor": "#1d3f6e"
   },
@@ -75,18 +123,18 @@
   },
   {
    "fonte": "TechTudo",
-   "titulo": "iPhone em promoção: 5 opções para comprar com desconto",
-   "resumo": "A Black Friday 2026 já oferece alguns iPhones em promoção. Do modelo mais simples, o iPhone 16e, até o iPhone 17, lançado no ano passado e ainda bastante competitivo…",
-   "link": "https://www.techtudo.com.br/listas/2026/11/iphone-em-promocao-5-opcoes-para-comprar-com-desconto-hoje-bf2026-edqualcomprarmb.ghtml",
-   "data": "2026-11-27T03:29:27+00:00",
+   "titulo": "8 jogos clássicos de PS4 por até R$ 60 para comprar",
+   "resumo": "Para celebrar a Black Friday no Brasil, a PlayStation preparou ofertas em jogos em mídia física, hardware, periféricos e acessórios, com preços especiais entre 20 de…",
+   "link": "https://www.techtudo.com.br/listas/2026/11/8-jogos-classicos-de-ps4-por-ate-r-60-para-comprar-na-black-friday-bf2026-edqualcomprarjg.ghtml",
+   "data": "2026-11-27T09:00:00+00:00",
    "cor": "#0a4ea8"
   },
   {
    "fonte": "Olhar Digital",
-   "titulo": "Seu Direito Digital: quem responde se a IA errar na sua compra de Black Friday?",
-   "resumo": "",
-   "link": "https://olhardigital.com.br/2026/11/26/colunistas/seu-direito-digital-quem-responde-se-a-ia-errar-na-sua-compra-de-black-friday/",
-   "data": null,
+   "titulo": "China acha maior reserva de ouro desde 1949 avaliada em US$ 165 bi",
+   "resumo": "A combinação de falhas, fraturas e rochas específicas ajuda a explicar a jazida de Dadonggou e pode orientar a busca por outros depósitos O post China acha maior reserva…",
+   "link": "https://olhardigital.com.br/2026/11/27/pro/china-acha-maior-reserva-de-ouro-desde-1949-avaliada-em-us-165-bi/",
+   "data": "2026-11-27T14:33:06+00:00",
    "cor": "#0d6efd"
   },
   {
@@ -99,18 +147,18 @@
   },
   {
    "fonte": "g1",
-   "titulo": "VALDO: Trabuco facilita aprovação de 2ª etapa do ajuste fiscal",
+   "titulo": "CAMAROTTI: Grupo de Haddad deve ficar fora do Lula 4",
    "resumo": "",
-   "link": "https://g1.globo.com/politica/blog/valdo-cruz/post/2026/11/27/trabuco-na-fazenda-facilita-aprovacao-de-2a-etapa-do-ajuste-fiscal-e-trara-mais-tranquilidade-para-inicio-do-lula-4.ghtml",
+   "link": "https://g1.globo.com/politica/blog/gerson-camarotti/post/2026/11/27/com-escolha-de-trabuco-grupo-de-haddad-deve-ficar-fora-do-lula-4.ghtml",
    "data": null,
    "cor": "#c4170c"
   },
   {
    "fonte": "Estadão",
-   "titulo": "Meirelles: Trabuco deve evitar embates públicos e dialogar diretamente com seus críticos",
+   "titulo": "Trabuco terá de se afastar do Bradesco e rever suas 790 mil ações do banco; veja as regras para assumir Fazenda",
    "resumo": "",
-   "link": "https://www.estadao.com.br/economia/meirelles-trabuco-evitar-embates-publicos-dialogar-criticos/",
-   "data": "2026-11-27T10:59:26+00:00",
+   "link": "https://www.estadao.com.br/einvestidor/cenarios-e-mercado/trabuco-tera-de-se-afastar-do-bradesco-e-adotar-medidas-contra-conflito-de-interesses/",
+   "data": null,
    "cor": "#1d3f6e"
   },
   {
@@ -123,10 +171,10 @@
   },
   {
    "fonte": "TechTudo",
-   "titulo": "7 celulares com boas câmeras para comprar sem gastar muito",
-   "resumo": "Quer comprar um celular barato e com a câmera boa? Apesar de parecer uma missão difícil, a verdade é que esse tipo de aparelho está disponível no catálogo de marcas como…",
-   "link": "https://www.techtudo.com.br/listas/2026/11/celular-com-camera-boa-e-barato-edmobile.ghtml",
-   "data": "2026-11-27T10:48:20+00:00",
+   "titulo": "3 robôs aspiradores com descontos de até 31% na Black Friday",
+   "resumo": "Nesta Black Friday, robôs aspiradores bem avaliados pelo público podem ser adquiridos com descontos de até 31% no e-commerce. É o caso do Kabum Smart 100, que está…",
+   "link": "https://www.techtudo.com.br/listas/2026/11/robos-aspiradores-com-descontos-na-black-friday-bf2026-edqualcomprarie.ghtml",
+   "data": "2026-11-27T14:35:10+00:00",
    "cor": "#0a4ea8"
   },
   {
@@ -147,18 +195,18 @@
   },
   {
    "fonte": "g1",
-   "titulo": "Banqueiro terá ajuste fiscal e resistência no PT entre desafios",
+   "titulo": "VALDO: Trabuco facilita aprovação de 2ª etapa do ajuste fiscal",
    "resumo": "",
-   "link": "https://g1.globo.com/economia/noticia/2026/11/27/trabuco-tera-ajuste-fiscal-juros-e-resistencia-no-pt-entre-desafios-a-frente-da-fazenda.ghtml",
+   "link": "https://g1.globo.com/politica/blog/valdo-cruz/post/2026/11/27/trabuco-na-fazenda-facilita-aprovacao-de-2a-etapa-do-ajuste-fiscal-e-trara-mais-tranquilidade-para-inicio-do-lula-4.ghtml",
    "data": null,
    "cor": "#c4170c"
   },
   {
    "fonte": "Estadão",
-   "titulo": "Ir para a editoria 'EFEITO TRABUCO'",
+   "titulo": "Ir para a editoria Avaliação positiva",
    "resumo": "",
-   "link": "https://www.estadao.com.br/einvestidor/cenarios-e-mercado/ibovespa-disparou-6-com-efeito-trabuco-e-agora-testa-o-folego-do-rali/",
-   "data": null,
+   "link": "https://www.estadao.com.br/economia/ex-ministros-fazenda-disseram-trabuco-comando-economia/",
+   "data": "2026-11-27T14:12:17+00:00",
    "cor": "#1d3f6e"
   },
   {
@@ -171,18 +219,18 @@
   },
   {
    "fonte": "TechTudo",
-   "titulo": "8 jogos clássicos de PS4 por até R$ 60 para comprar",
-   "resumo": "Para celebrar a Black Friday no Brasil, a PlayStation preparou ofertas em jogos em mídia física, hardware, periféricos e acessórios, com preços especiais entre 20 de…",
-   "link": "https://www.techtudo.com.br/listas/2026/11/8-jogos-classicos-de-ps4-por-ate-r-60-para-comprar-na-black-friday-bf2026-edqualcomprarjg.ghtml",
-   "data": "2026-11-27T09:00:00+00:00",
+   "titulo": "Melhor notebook custo-benefício para comprar: 7 opções",
+   "resumo": "A Black Friday acontece hoje e é uma das melhores épocas do ano para trocar de notebook sem precisar pagar o preço cheio por um modelo novo. Pensando nisso, o TechTudo…",
+   "link": "https://www.techtudo.com.br/listas/2026/11/melhor-notebook-custo-beneficio-para-comprar-na-black-friday-bf2026-edqualcomprarie.ghtml",
+   "data": "2026-11-27T07:00:01+00:00",
    "cor": "#0a4ea8"
   },
   {
    "fonte": "Olhar Digital",
-   "titulo": "O planeta vai ultrapassar 1,5 °C de aquecimento. A tecnologia pode reverter isso?",
-   "resumo": "",
-   "link": "https://olhardigital.com.br/2026/11/26/ciencia-e-espaco/o-planeta-vai-ultrapassar-15-c-de-aquecimento-a-tecnologia-pode-reverter-isso/",
-   "data": null,
+   "titulo": "Black Friday: vai trocar de TV? Conheça as tecnologias de tela antes de aproveitar as ofertas",
+   "resumo": "LCD, OLED, QLED, Mini LED e MicroLED: entenda as diferenças entre as principais tecnologias e descubra qual combina mais com seu bolso e suas necessidades O post Black…",
+   "link": "https://olhardigital.com.br/2026/11/27/reviews/black-friday-vai-trocar-de-tv-conheca-as-tecnologias-de-tela-antes-de-aproveitar-as-ofertas/",
+   "data": "2026-11-27T14:10:54+00:00",
    "cor": "#0d6efd"
   },
   {
@@ -195,98 +243,50 @@
   },
   {
    "fonte": "g1",
-   "titulo": "Expectativa de vida no Brasil sobe para 76,9 anos em 2025, diz IBGE",
+   "titulo": "O que outros banqueiros fizeram enquanto estiveram à frente da Fazenda",
    "resumo": "",
-   "link": "https://g1.globo.com/economia/noticia/2026/11/27/expectativa-de-vida-no-brasil-sobe-para-769-anos-em-2025-diz-ibge.ghtml",
-   "data": null,
+   "link": "https://g1.globo.com/economia/noticia/2026/11/27/trabuco-na-fazenda-veja-outros-banqueiros-que-estiveram-a-frente-do-ministerio-da-fazenda.ghtml",
+   "data": "2026-11-27T14:48:59+00:00",
    "cor": "#c4170c"
   },
   {
    "fonte": "Estadão",
-   "titulo": "Bolsa sobe, dólar e juros caem, mas mercado vê riscos que ameaçam o rali",
+   "titulo": "Trabuco é uma jogada de mestre. Que limites ele terá para agir, uma incógnita",
    "resumo": "",
-   "link": "https://www.estadao.com.br/einvestidor/cenarios-e-mercado/trabuco-na-fazenda-bolsa-sobe-dolar-e-juros-caem-mas-mercado-ve-riscos-que-ameacam-o-rali/",
+   "link": "https://www.estadao.com.br/politica/fernando-schuler/trabuco-e-uma-jogada-de-mestre-que-limites-ele-tera-para-agir-uma-incognita/",
    "data": null,
    "cor": "#1d3f6e"
   },
   {
    "fonte": "Folha",
-   "titulo": "Dólar abre em queda de quase 4% e vai a R$ 5,52 após Trabuco ser confirmado na Fazenda",
-   "resumo": "",
+   "titulo": "Dólar cai mais de 4% e chega a R$ 5,48 após confirmação de Trabuco na Fazenda; Bolsa dispara",
+   "resumo": "O dólar desaba nesta sexta-feira (27), em meio à reação positiva dos investidores à confirmação de Luiz Carlos Trabuco , presidente do conselho de administração do…",
    "link": "https://www1.folha.uol.com.br/mercado/2026/11/dolar-abre-em-queda-de-quase-4-e-atinge-r-552-apos-confirmacao-de-trabuco-na-fazenda.shtml",
-   "data": null,
+   "data": "2026-11-27T09:14:00-03:00",
    "cor": "#00618a"
   },
   {
    "fonte": "TechTudo",
-   "titulo": "Galaxy Buds4 Pro na Black Friday com menor preço histórico por R$ 924",
-   "resumo": "O Samsung Galaxy Buds 4 Pro está em oferta na Black Friday 2026 saindo no precinho por R$ 924 com o cupom MELI1CL. O fone de ouvido Bluetooth da fabricante sul-coreana…",
-   "link": "https://www.techtudo.com.br/noticias/2026/11/galaxy-buds4-pro-na-black-friday-com-menor-preco-historico-por-r-924-bf2026-edqualcomprarie.ghtml",
-   "data": "2026-11-27T12:20:49+00:00",
+   "titulo": "OPPO Reno16 está mais elegante, mas preço ainda é elevado; análise",
+   "resumo": "Lançado em agosto deste ano no Brasil, o OPPO Reno 16 é o mais recente intermediário premium da marca chinesa. Em relação ao antecessor, o OPPO Reno 14, o aparelho ficou…",
+   "link": "https://www.techtudo.com.br/guia/2026/11/oppo-reno16-esta-mais-elegante-mas-preco-ainda-e-elevado-analise-edmobile.ghtml",
+   "data": "2026-11-27T06:00:00+00:00",
    "cor": "#0a4ea8"
   },
   {
    "fonte": "Olhar Digital",
-   "titulo": "Terra ganha minilua temporária que revela mistério centenário",
+   "titulo": "Seu Direito Digital: quem responde se a IA errar na sua compra de Black Friday?",
    "resumo": "",
-   "link": "https://olhardigital.com.br/2026/11/26/ciencia-e-espaco/terra-ganha-minilua-temporaria-que-revela-misterio-centenario/",
+   "link": "https://olhardigital.com.br/2026/11/26/colunistas/seu-direito-digital-quem-responde-se-a-ia-errar-na-sua-compra-de-black-friday/",
    "data": null,
    "cor": "#0d6efd"
   },
   {
    "fonte": "ge",
-   "titulo": "Brasil enfrenta a Costa Rica pelo Mundial sub-17; siga em tempo real",
-   "resumo": "Mundial Sub-17 2026 no globoesporte.com - acompanhe tudo sobre Costa Rica x Brasil: escalação, informações sobre o jogo, fotos e muito mais",
-   "link": "https://ge.globo.com/ba/futebol/jogo/27-11-2026/costa-rica-brasil-mundial-sub-17.ghtml",
-   "data": "2026-11-27T14:27:52+00:00",
-   "cor": "#06aa48"
-  },
-  {
-   "fonte": "g1",
-   "titulo": "Tenente da Marinha acusa superior de estupro em navio na Europa",
-   "resumo": "",
-   "link": "https://g1.globo.com/rj/rio-de-janeiro/noticia/2026/11/27/tenente-da-marinha-viagem-de-ouro-na-europa-militares-repatriados.ghtml",
-   "data": null,
-   "cor": "#c4170c"
-  },
-  {
-   "fonte": "Estadão",
-   "titulo": "Qual o desafio de Luiz Carlos Trabuco à frente da Fazenda, segundo economistas",
-   "resumo": "",
-   "link": "https://www.estadao.com.br/economia/o-desafio-de-trabuco-a-frente-do-ministerio-da-fazenda-segundo-economistas/",
-   "data": "2026-11-27T08:30:00+00:00",
-   "cor": "#1d3f6e"
-  },
-  {
-   "fonte": "Folha",
-   "titulo": "Haddad deseja 'sorte e serenidade' e diz que ministério deve mirar programa eleito nas ruas",
-   "resumo": "",
-   "link": "https://www1.folha.uol.com.br/mercado/2026/11/haddad-deseja-sorte-e-serenidade-a-trabuco-e-diz-que-fazenda-deve-mirar-programa-eleito-nas-ruas.shtml",
-   "data": null,
-   "cor": "#00618a"
-  },
-  {
-   "fonte": "TechTudo",
-   "titulo": "Melhor notebook custo-benefício para comprar: 7 opções",
-   "resumo": "A Black Friday acontece hoje e é uma das melhores épocas do ano para trocar de notebook sem precisar pagar o preço cheio por um modelo novo. Pensando nisso, o TechTudo…",
-   "link": "https://www.techtudo.com.br/listas/2026/11/melhor-notebook-custo-beneficio-para-comprar-na-black-friday-bf2026-edqualcomprarie.ghtml",
-   "data": "2026-11-27T07:00:01+00:00",
-   "cor": "#0a4ea8"
-  },
-  {
-   "fonte": "Olhar Digital",
-   "titulo": "FDA aprova novo tratamento hormonal para câncer de mama inicial",
-   "resumo": "",
-   "link": "https://olhardigital.com.br/2026/11/27/medicina-e-saude/fda-aprova-novo-tratamento-hormonal-para-cancer-de-mama-inicial/",
-   "data": null,
-   "cor": "#0d6efd"
-  },
-  {
-   "fonte": "ge",
-   "titulo": "Siga o 1º treino livre do GP do Catar, com Bortoleto e Rafa Câmara na pista",
-   "resumo": "",
-   "link": "https://ge.globo.com/motor/formula-1/ao-vivo/gp-do-catar-a-22-etapa-da-f1-2026.ghtml",
-   "data": "2026-11-27T13:57:28+00:00",
+   "titulo": "Antonelli lidera 1º treino do GP do Catar; veja classificação completa",
+   "resumo": "A penúltima etapa da temporada 2026 da F1 já começou! E o primeiro treino livre do GP do Catar foi liderado, nesta sexta-feira, pelo atual campeão Kimi Antonelli. O…",
+   "link": "https://ge.globo.com/motor/formula-1/noticia/2026/11/27/gp-do-catar-antonelli-lidera-1o-treino-bortoleto-e-11o-e-camara-fica-em-15o.ghtml",
+   "data": "2026-11-27T14:31:42+00:00",
    "cor": "#06aa48"
   }
  ]
