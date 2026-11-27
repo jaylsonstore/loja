@@ -17,6 +17,9 @@ CAPAS = {
     "TechTudo": "https://www.techtudo.com.br/",
     "Olhar Digital": "https://olhardigital.com.br/",
     "ge": "https://ge.globo.com/",
+    "O São Gonçalo": "https://www.osaogoncalo.com.br/",
+    "O Fluminense": "https://www.ofluminense.com.br/",
+    "Jovem Pan": "https://jovempan.com.br/",
 }
 RE_A = re.compile(r'<a\b([^>]*)>(.*?)</a>', re.S | re.I)
 RE_HREF = re.compile(r'href\s*=\s*["\']([^"\']+)["\']', re.I)
@@ -69,6 +72,9 @@ FONTES = [
     ("TechTudo",      "#0a4ea8", ["https://pox.globo.com/rss/techtudo/"], "techtudo.com.br"),
     ("Olhar Digital", "#0d6efd", ["https://olhardigital.com.br/feed/"], "olhardigital.com.br"),
     ("ge",            "#06aa48", ["https://ge.globo.com/rss/ge/"], "ge.globo.com"),
+    ("O São Gonçalo", "#0b4f9c", ["https://www.osaogoncalo.com.br/feed/", "https://www.osaogoncalo.com.br/rss"], "osaogoncalo.com.br"),
+    ("O Fluminense",  "#1b3f8b", ["https://www.ofluminense.com.br/feed/", "https://www.ofluminense.com.br/rss"], "ofluminense.com.br"),
+    ("Jovem Pan",     "#d71920", ["https://jovempan.com.br/feed"], "jovempan.com.br"),
 ]
 POR_FONTE = 6
 UA = {"User-Agent": "Mozilla/5.0 (JaylsonStore vitrine; +https://jaylsonstore.github.io/loja/)"}
