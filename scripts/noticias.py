@@ -36,7 +36,7 @@ def eh_materia(url, dominio):
     if caminho.endswith((".ghtml", ".shtml")) or re.search(r"/20\d\d/\d\d/", caminho):
         return True
     ult = [x for x in caminho.split("/") if x]
-    return len(ult) >= 2 and ult[-1].count("-") >= 4
+    return len(ult) >= 1 and ult[-1].count("-") >= 4
 
 def destaques(nome, dominio, limite=12):
     raw = baixar(CAPAS[nome]).decode("utf-8", "replace")
