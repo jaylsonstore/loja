@@ -21,7 +21,7 @@ CAPAS = {
 RE_A = re.compile(r'<a\b([^>]*)>(.*?)</a>', re.S | re.I)
 RE_HREF = re.compile(r'href\s*=\s*["\']([^"\']+)["\']', re.I)
 RE_TIT = re.compile(r'(?:title|aria-label)\s*=\s*["\']([^"\']{25,220})["\']', re.I)
-RUIDO = re.compile(r"assine|newsletter|podcast|^v[ií]deos?\b|ao vivo|cookies|termos de uso|publicidade|oferta|cupom", re.I)
+RUIDO = re.compile(r"assine|newsletter|podcast|^v[ií]deos?\b|ao vivo|cookies|termos de uso|publicidade|ofertas? do dia|cupo(m|ns)|melhores promoções", re.I)
 
 def eh_materia(url, dominio):
     u = urllib.parse.urlparse(url)
