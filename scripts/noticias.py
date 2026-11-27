@@ -43,7 +43,13 @@ def destaques(nome, dominio, limite=12):
         link = urllib.parse.urljoin(CAPAS[nome], html.unescape(m.group(1))).split("#")[0]
         if not eh_materia(link, dominio) or link in vistos:
             continue
-        titulo = limpa(inner)
+        # só o título: ignora "chapéu"/seção/nome do colunista que vêm em outros blocos do link
+        mh = re.search(r"<h[1-4][^>]*>(.*?)</h[1-4]>", inner, re.S | re.I)
+        if mh:
+            titulo = limpa(mh.group(1))
+        else:
+            partes = [limpa(x) for x in re.split(r"<[^>]+>", inner)]
+            titulo = max(partes, key=len) if partes else ""
         if len(titulo) < 30:
             mt = RE_TIT.search(attrs)
             titulo = limpa(mt.group(1)) if mt else titulo
