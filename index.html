@@ -2497,8 +2497,7 @@ function qrCanvas(texto,px){
     return c; }catch(e){ return null; } }
 function vtLista(){
   const base=ordenar(visiveis().filter(p=>!p.esgotado && (!VT.cat || p.categoria===VT.cat)));
-  const comMidia=base.filter(p=>capa(p)||p.video);
-  return comMidia.length?comMidia:base;
+  return base; // todo o catálogo visível (sem foto usa a ilustração da categoria)
 }
 function vtItens(p){
   const seq=[], usadas=new Set();
@@ -2539,7 +2538,7 @@ function renderVitrine(cat){
   vtProximo(1);
 }
 /* ---- Auto-atualização: se publicar versão nova, o tablet recarrega sozinho ---- */
-const APP_VER="2026-11-27a";
+const APP_VER="2026-11-27b";
 async function vtChecaVersao(){
   try{ const r=await fetch(location.pathname+"?v="+Date.now(),{cache:"no-store"}); if(!r.ok) return;
     const m=(await r.text()).match(/APP_VER="([^"]+)"/); if(m && m[1]!==APP_VER) location.reload(); }catch(e){}
